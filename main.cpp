@@ -6,12 +6,10 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    TDatabase callsdb("calls.db");
-    QWidget g;
+    TDatabase callsdb("TCalls.db");
     std::vector<std::string> missings;
     TCalls c_calls(callsdb, missings);
-    w.MainWindow();
+    MainWindow w(&c_calls, &callsdb);
     w.show();
     return a.exec();
 }

@@ -56,6 +56,8 @@ signals:
     void qonKeyBoardEnterClicked();
 private:
     Ui::MainWindow *ui;
+    TCalls *calls;
+    TDatabase *database;
     QString flag;
     int qsize;
 };

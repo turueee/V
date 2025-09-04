@@ -28,7 +28,7 @@ FORMS += \
 
 win32 {
     COPIES += database
-    database.files = $$PWD/calls.db
+    database.files = $$PWD/TCalls.db
     database.path = $$OUT_PWD
 }
 # Default rules for deployment.

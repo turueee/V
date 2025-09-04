@@ -4,9 +4,10 @@
 MainWindow::MainWindow(TCalls *c_calls, TDatabase *db,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , calls(c_calls)
+    , database(db)
 { 
     ui->setupUi(this);
-    c_calls->setCalls(database->readTableToMap());
     flag = "";
     setupMissingTable(c_calls);
     ui->stackedWidget->setCurrentWidget(ui->StartPage);
