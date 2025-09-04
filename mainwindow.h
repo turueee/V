@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, TCalls *c_calls = nullptr, TDatabase *db = nullptr);
+    MainWindow(TCalls *c_calls, TDatabase *db,QWidget *parent = nullptr);
     ~MainWindow();
     // void fuel_names(std::vector<std::string>& names, const std::vector<std::string>& missing);
     // void k_doske(std::vector<std::string> &names, const size_t stud, std::map<std::string, size_t>& calls, std::vector<std::string> missing);
@@ -42,7 +42,7 @@ public:
     // void delete_missing(std::vector<std::string>& _names, const std::vector<std::string>& missing);
     void setupMissingTable(TCalls *c_calls);
     void setupChangedPointsTable(TCalls *c_calls);
-    void updateChangedPointsTable();
+    void updateChangedPointsTable(TCalls *c_calls);
 private slots:
     void onPushButtonCallStudentsClicked();
     void onPushButtonMinusPointClicked(TCalls *c_calls);
@@ -50,8 +50,8 @@ private slots:
     void onPushButtonSaveDataClicked();
     void onPushButtonBackClicked();
     void onPushButtonNextClicked();
-    void onMissingTableButtonClicked();
-    void onChangedPointsTableButtonClicked();
+    void onMissingTableButtonClicked(TCalls *c_calls);
+    void onChangedPointsTableButtonClicked(TCalls *c_calls);
 signals:
     void qonKeyBoardEnterClicked();
 private:

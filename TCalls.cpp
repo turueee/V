@@ -59,6 +59,11 @@ void TCalls::setMissings(std::vector<std::string> missings_)
     missings = std::move(missings_);
 }
 
+size_t TCalls::getPoints(std::string name)
+{
+    return calls[name];
+}
+
 std::vector<std::string> TCalls::getNamesKDoske(size_t stud)
 {
     std::srand(std::time(nullptr));
