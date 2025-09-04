@@ -1,11 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(TCalls *c_calls, TDatabase *db,QWidget *parent)
+MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , calls(c_calls)
-    , database(db)
 { 
     ui->setupUi(this);
     flag = "";
@@ -30,74 +28,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// void MainWindow::fuel_names(std::vector<std::string> &names, const std::vector<std::string>& missing)
-// {
-//     read_from_file(calls);
-//     for (std::pair<std::string, size_t> call:calls)
-//     {
-//         names.push_back(call.first);
-//     }
-//     delete_missing(names, missing);
-// }
-
-// void MainWindow::delete_missing(std::vector<std::string>& _names, const std::vector<std::string>& missing)
-// {
-//     for (std::string absent : missing)
-//     {
-//         auto it = std::find(_names.begin(), _names.end(), absent);
-//         if (it != _names.end()) {
-//             _names.erase(it);
-//         }
-//     }
-// }
-
-// void MainWindow::k_doske(std::vector<std::string> &names, const size_t stud, std::map<std::string, size_t>& calls, std::vector<std::string> missing)
-// {
-//     read_from_file(calls);
-//     std::srand(std::time(nullptr));
-//     std::vector<std::string> min_calls, max_calls;
-//     size_t minim = min(calls),i = 0;
-//     for (std::pair<std::string, size_t> call : calls)
-//     {
-//         if (call.second == minim)
-//             min_calls.push_back(call.first);
-//         else
-//             max_calls.push_back(call.first);
-//     }
-
-//     delete_missing(min_calls, missing);
-//     delete_missing(max_calls, missing);
-
-//     while (!min_calls.empty() && i < stud)
-//     {
-//         int random = std::rand() % min_calls.size();
-//         ui->textEditOutput->append(QString::fromStdString(min_calls[random]));
-//         calls[min_calls[random]] += 1;
-//         min_calls.erase(min_calls.begin() + random);
-//         i++;
-//     }
-//     while (!max_calls.empty() && i < stud)
-//     {
-//         int random = std::rand() % max_calls.size();
-//         ui->textEditOutput->append(QString::fromStdString(max_calls[random]));
-//         calls[max_calls[random]] += 1;
-//         max_calls.erase(max_calls.begin() + random);
-//         i++;
-//     }
-//     save_to_file(calls, names);
-// }
-
-// void MainWindow::read_from_file(TCalls &c_calls_, TDatabase database_)
-// {
-//     c_calls_.setCalls(database_.readTableToMap());
-// }
-
-// void MainWindow::save_to_file(TCalls &calls)
-// {
-//     TDatabase callsdb("calls.db");
-//     callsdb.updateNumbersByName(calls);
-// }
-void MainWindow::call_students(TCalls *c_calls)
+void MainWindow::call_students(TCalls &c_calls)
 {
     size_t max = qsize, stud = 0;
     ui->textEditOutput->clear();
@@ -108,7 +39,7 @@ void MainWindow::call_students(TCalls *c_calls)
         return;
     }
     std::vector<std::string> names_2;
-    names_2 = c_calls->getNamesKDoske(stud);
+    names_2 = c_calls.getNamesKDoske(stud);
     for (size_t i = 0; i < stud ; i++)
     {
         ui->textEditOutput->append(QString::fromStdString(names_2[i]));
@@ -116,7 +47,7 @@ void MainWindow::call_students(TCalls *c_calls)
     // мб тут нудно getNames
 }
 
-bool MainWindow::eventEnterFilter(QObject* obj, QEvent* event,TCalls *c_calls)
+bool MainWindow::eventEnterFilter(QObject* obj, QEvent* event,TCalls &c_calls)
 {
     if (obj == ui->textEditInput && event->type() == QEvent::KeyPress)
     {
@@ -131,15 +62,8 @@ bool MainWindow::eventEnterFilter(QObject* obj, QEvent* event,TCalls *c_calls)
     return QMainWindow::eventFilter(obj, event);
 }
 
-// int MainWindow::min(std::map<std::string, size_t> calls)
-// {
-//     size_t min = 1000;
-//     for (std::pair<std::string, size_t> call : calls)
-//         min = (min > call.second) ? call.second : min;
-//     return min;
-// }
 
-void MainWindow::onPushButtonCallStudentsClicked()
+void MainWindow::onPushButtonCallStudentsClicked(TCalls c_calls)
 {
     ui->stackedWidget->setCurrentWidget(ui->CallPage);
     ui->lineEditMessage->setText("Enter the count of students");
@@ -147,7 +71,7 @@ void MainWindow::onPushButtonCallStudentsClicked()
     ui->pushButtonBackClicked->setVisible(true);
 }
 
-void MainWindow::onPushButtonMinusPointClicked(TCalls *c_calls)
+void MainWindow::onPushButtonMinusPointClicked(TCalls &c_calls)
 {
     ui->lineEditMessage->setText("Enter name");
     flag = "-";
@@ -156,7 +80,7 @@ void MainWindow::onPushButtonMinusPointClicked(TCalls *c_calls)
     ui->stackedWidget->setCurrentWidget(ui->ChangedPointPage);
 }
 
-void MainWindow::onPushButtonPlusPointClicked(TCalls *c_calls)
+void MainWindow::onPushButtonPlusPointClicked(TCalls &c_calls)
 {
     ui->lineEditMessage->setText("Enter name");
     flag = "+";
@@ -188,14 +112,14 @@ void MainWindow::onPushButtonNextClicked()
     ui->lineEditMessage->setText("Сhoice the action");
 }
 
-void MainWindow::setupMissingTable(TCalls *c_calls)
+void MainWindow::setupMissingTable(TCalls &c_calls)
 {
     int i = 0;
-    ui->tableWidget->setRowCount(c_calls->getCallsSize());
+    ui->tableWidget->setRowCount(c_calls.getCallsSize());
     ui->tableWidget->setColumnWidth(0, 300);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    for (std::pair<std::string, int> call : c_calls->getCalls())
+    for (std::pair<std::string, int> call : c_calls.getCalls())
     {
         QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(call.first));
         QFont font = nameItem->font();
@@ -211,9 +135,9 @@ void MainWindow::setupMissingTable(TCalls *c_calls)
     }
 }
 
-void MainWindow::setupChangedPointsTable(TCalls *c_calls)
+void MainWindow::setupChangedPointsTable(TCalls &c_calls)
 {
-    std::vector<std::string> names = c_calls->getNames();
+    std::vector<std::string> names = c_calls.getNames();
     ui->tableWidget_2->setRowCount(names.size());
     ui->tableWidget_2->setColumnWidth(0, 300);
     ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
@@ -227,7 +151,7 @@ void MainWindow::setupChangedPointsTable(TCalls *c_calls)
         font.setPointSize(12);
         nameItem->setFont(font);
         ui->tableWidget_2->setItem(i, 0, nameItem);
-        QTableWidgetItem *callItem = new QTableWidgetItem(QString::number(c_calls->getPoints(names[i])));
+        QTableWidgetItem *callItem = new QTableWidgetItem(QString::number(c_calls.getPoints(names[i])));
         callItem->setFont(font);
         callItem->setFlags(callItem->flags() & ~Qt::ItemIsEditable);
         QPushButton *button = new QPushButton(flag);
@@ -238,26 +162,26 @@ void MainWindow::setupChangedPointsTable(TCalls *c_calls)
     }
 }
 
-void MainWindow::updateChangedPointsTable(TCalls *c_calls)
+void MainWindow::updateChangedPointsTable(TCalls &c_calls)
 {
-    std::vector<std::string> names = c_calls->getNames();
+    std::vector<std::string> names = c_calls.getNames();
     for (size_t i = 0; i < names.size(); ++i) {
         QTableWidgetItem *callItem = ui->tableWidget_2->item(i, 1);
         if (callItem) {
-            callItem->setText(QString::number(c_calls->getPoints(names[i])));
+            callItem->setText(QString::number(c_calls.getPoints(names[i])));
         }
     }
     // save_to_file(calls, names);
 }
 
-void MainWindow::onMissingTableButtonClicked(TCalls *c_calls)
+void MainWindow::onMissingTableButtonClicked(TCalls &c_calls)
 {
     QPushButton *button = qobject_cast<QPushButton*>(sender());
     if (!button) return;
     QString studentName = button->property("studentName").toString();
     std::vector<std::string> missing;
     missing.push_back(studentName.toStdString());
-    c_calls->setMissings(missing);
+    c_calls.setMissings(missing);
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         if (ui->tableWidget->cellWidget(row, 1) == button) {
             QTableWidgetItem* nameItem = ui->tableWidget->item(row, 0);
@@ -272,16 +196,16 @@ void MainWindow::onMissingTableButtonClicked(TCalls *c_calls)
     button->setEnabled(false);
 }
 
-void MainWindow::onChangedPointsTableButtonClicked(TCalls *c_calls)
+void MainWindow::onChangedPointsTableButtonClicked(TCalls &c_calls)
 {
     QPushButton *button = qobject_cast<QPushButton*>(sender());
     if (!button) return;
 
     QString studentName = button->property("studentName").toString();
     if(flag == "+")
-        c_calls->setCallsByName(studentName.toStdString(),1);
-    else if((flag == "-") && (c_calls->getPoints(studentName.toStdString()) > 0))
-        c_calls->setCallsByName(studentName.toStdString(),-1);
+        c_calls.setCallsByName(studentName.toStdString(),1);
+    else if((flag == "-") && (c_calls.getPoints(studentName.toStdString()) > 0))
+        c_calls.setCallsByName(studentName.toStdString(),-1);
     else
         ui->statusbar->showMessage("Error");
     updateChangedPointsTable(c_calls);
