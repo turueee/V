@@ -9,7 +9,11 @@ TCalls::TCalls(TDatabase& db,const std::vector<std::string> missings_)
 
 std::vector<std::string> TCalls::getNames()
 {
-    return std::vector<std::string> (missings.begin(),missings.end());
+    std::vector<std::string> result;
+    for (const auto& entry : calls) {
+        result.push_back(entry.first);
+    }
+    return result;
 }
 
 void TCalls::setCallsByName(std::string name, size_t points)

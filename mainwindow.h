@@ -28,31 +28,28 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent = nullptr);
     ~MainWindow();
-    // void fuel_names(std::vector<std::string>& names, const std::vector<std::string>& missing);
-    // void k_doske(std::vector<std::string> &names, const size_t stud, std::map<std::string, size_t>& calls, std::vector<std::string> missing);
     // void read_from_file(const TCalls &c_calls_, TDatabase database_);
     // void save_to_file(const TCalls &c_calls_, TDatabase database_);
-    void call_students(TCalls &c_calls, TDatabase &db);
-    bool eventEnterFilter(QObject* obj, QEvent* event ,TCalls &c_calls, TDatabase & db);
-    // int min(std::map<std::string, size_t> calls);
-    // void delete_missing(std::vector<std::string>& _names, const std::vector<std::string>& missing);
-    void setupMissingTable(TCalls &c_calls);
-    void setupChangedPointsTable(TCalls &c_calls);
-    void updateChangedPointsTable(TCalls &c_calls);
+    void call_students();
+    bool eventFilter(QObject* obj, QEvent* event);
+    void setupMissingTable();
+    void setupChangedPointsTable();
+    void updateChangedPointsTable();
 private slots:
     void onPushButtonCallStudentsClicked();
-    // void onPushButtonMinusPointClicked(TCalls &c_calls);
-    // void onPushButtonPlusPointClicked(TCalls &c_calls);
+    void onPushButtonMinusPointClicked();
+    void onPushButtonPlusPointClicked();
     void onPushButtonSaveDataClicked();
     void onPushButtonBackClicked();
     void onPushButtonNextClicked();
-    // void onMissingTableButtonClicked(TCalls &c_calls);
-    // void onChangedPointsTableButtonClicked(TCalls &c_calls);
+    void onMissingTableButtonClicked();
+    void onChangedPointsTableButtonClicked();
 signals:
     void qonKeyBoardEnterClicked();
 private:
     Ui::MainWindow *ui;
     QString flag;
-    int qsize;
+    TCalls calls;
+    TDatabase database;
 };
 #endif // MAINWINDOW_H
