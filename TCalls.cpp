@@ -58,9 +58,9 @@ void TCalls::setCalls(std::map<std::string, size_t> calls_)
     calls = std::move(calls_);
 }
 
-void TCalls::setMissings(std::vector<std::string> missings_)
+void TCalls::setMissings(std::string missing)
 {
-    missings = std::move(missings_);
+    missings.push_back(missing);
 }
 
 size_t TCalls::getPoints(std::string name)

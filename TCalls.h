@@ -22,7 +22,7 @@ public:
     void setCalls(std::map<std::string, size_t> calls_);
     std::vector<std::string> getNamesKDoske(size_t stud);
     void setCallsByName(std::string name, size_t points);
-    void setMissings(std::vector<std::string> missings_);
+    void setMissings(std::string missings_);
     size_t getPoints(std::string name);
 };
 

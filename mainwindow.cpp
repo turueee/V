@@ -123,16 +123,17 @@ void MainWindow::setupMissingTable()
     ui->tableWidget->setColumnWidth(0, 300);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    for (std::pair<std::string, int> call : calls.getCalls())
+    std::vector<std::string> names = calls.getNames();
+    for (std::string name : names)
     {
-        QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(call.first));
+        QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(name));
         QFont font = nameItem->font();
         font.setPointSize(12);
         nameItem->setFont(font);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         ui->tableWidget->setItem(i, 0, nameItem);
         QPushButton *button = new QPushButton("absent");
-        button->setProperty("studentName", QString::fromStdString(call.first));
+        button->setProperty("studentName", QString::fromStdString(name));
         connect(button, &QPushButton::clicked, this, &MainWindow::onMissingTableButtonClicked);
         ui->tableWidget->setCellWidget(i, 1, button);
         i++;
@@ -168,7 +169,7 @@ void MainWindow::setupChangedPointsTable()
 
 void MainWindow::updateChangedPointsTable()
 {
-    std::vector<std::string> names = calls.getNames();
+    std::vector<std::string> names = calls.getNamesWithoutMissings();
     for (size_t i = 0; i < names.size(); ++i) {
         QTableWidgetItem *callItem = ui->tableWidget_2->item(i, 1);
         if (callItem) {
@@ -183,9 +184,7 @@ void MainWindow::onMissingTableButtonClicked()
     QPushButton *button = qobject_cast<QPushButton*>(sender());
     if (!button) return;
     QString studentName = button->property("studentName").toString();
-    std::vector<std::string> missing;
-    missing.push_back(studentName.toStdString());
-    calls.setMissings(missing);
+    calls.setMissings(studentName.toStdString());
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         if (ui->tableWidget->cellWidget(row, 1) == button) {
             QTableWidgetItem* nameItem = ui->tableWidget->item(row, 0);
