@@ -10,12 +10,14 @@ RC_ICONS = 5.ico
 
 SOURCES += \
     main.cpp \
+    tcriteriallimit.cpp \
     mainwindow.cpp \
     tcalls.cpp \
     tdatabase.cpp
 
 HEADERS += \
     mainwindow.h \
+    tcriteriallimit.h \
     tcalls.h \
     tdatabase.h
 
