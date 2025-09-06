@@ -6,7 +6,7 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     , ui(new Ui::MainWindow)
     , calls(c_calls)
     , database(db)
-{ 
+{
     ui->setupUi(this);
     flag = "";
     setupMissingTable();
@@ -17,6 +17,7 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     ui->lineEditMessage->setText("Remove missing students");
     ui->lineEditMessage->setReadOnly(true);
     ui->textEditOutput->setReadOnly(true);
+    onPushButtonColorTopic();
     connect(ui->pushButtonCallStudents, &QPushButton::clicked, this, &MainWindow::onPushButtonCallStudentsClicked);
     connect(ui->pushButtonMinusPoint, &QPushButton::clicked, this, &MainWindow::onPushButtonMinusPointClicked);
     connect(ui->pushButtonPlusPoint, &QPushButton::clicked, this, &MainWindow::onPushButtonPlusPointClicked);
@@ -32,7 +33,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::call_students()
 {
-    // переделать
     std::vector<std::string> names = calls.getNamesWithoutMissings();
     size_t max = names.size(), stud = 0;
     ui->textEditOutput->clear();
@@ -118,13 +118,13 @@ void MainWindow::onPushButtonNextClicked()
 
 void MainWindow::setupMissingTable()
 {
-    int i = 0;
+    size_t i = 0;
     ui->tableWidget->setRowCount(calls.getCallsSize());
     ui->tableWidget->setColumnWidth(0, 300);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     std::vector<std::string> names = calls.getNames();
-    for (std::string name : names)
+    for (const auto& name : names)
     {
         QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(name));
         QFont font = nameItem->font();
@@ -177,6 +177,29 @@ void MainWindow::updateChangedPointsTable()
         }
     }
     database.updateNumbersByName(calls.getCalls());
+}
+
+void MainWindow::onPushButtonColorTopic()
+{
+    // переписать нормально
+    ui->pushButtonBackClicked->setStyleSheet("background-color: #323232;");
+    ui->pushButtonCallStudents->setStyleSheet("background-color: #323232;");
+    ui->pushButtonMinusPoint->setStyleSheet("background-color: #323232;");
+    ui->pushButtonPlusPoint->setStyleSheet("background-color: #323232;");
+    ui->pushButtonNextClicked->setStyleSheet("background-color: #323232;");
+    ui->pushButtonSaveData->setStyleSheet("background-color: #323232;");
+    ui->CallPage->setStyleSheet("background-color: #323232;");
+    ui->ChangedPointPage->setStyleSheet("background-color: #323232;");
+    ui->ChoicePage->setStyleSheet("background-color: #323232;");
+    ui->StartPage->setStyleSheet("background-color: #323232;");
+    ui->centralwidget->setStyleSheet("background-color: #323232;");
+    ui->lineEditMessage->setStyleSheet("background-color: #323232;");
+    ui->textEditInput->setStyleSheet("background-color: #323232;");
+    ui->textEditOutput->setStyleSheet("background-color: #323232;");
+    ui->menubar->setStyleSheet("background-color: #323232;");
+    ui->tableWidget->setStyleSheet("background-color: #323232;");
+    ui->tableWidget_2->setStyleSheet("background-color: #323232;");
+    ui->stackedWidget->setStyleSheet("background-color: #323232;");
 }
 
 void MainWindow::onMissingTableButtonClicked()

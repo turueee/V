@@ -1,9 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include <QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include <QHeaderView>
-#include <cstdlib>
-#include <ctime>
 #include <QString>
 #include <QKeyEvent>
 #include <QPushButton>
@@ -12,8 +10,8 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QFont>
-#include "TCalls.h"
-#include "TDatabase.h"
+#include "tcalls.h"
+#include "tdatabase.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +33,7 @@ public:
     void setupMissingTable();
     void setupChangedPointsTable();
     void updateChangedPointsTable();
+    void onPushButtonColorTopic();
 private slots:
     void onPushButtonCallStudentsClicked();
     void onPushButtonMinusPointClicked();
