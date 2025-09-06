@@ -14,7 +14,7 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     ui->pushButtonBackClicked->setVisible(false);
     ui->pushButtonNextClicked->setVisible(true);
     ui->textEditInput->installEventFilter(this);
-    ui->lineEditMessage->setText("Remove missing students");
+    ui->lineEditMessage->setText("Отметьте отсутствующий студентов");
     ui->lineEditMessage->setReadOnly(true);
     ui->textEditOutput->setReadOnly(true);
     onPushButtonColorTopic();
@@ -70,7 +70,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 void MainWindow::onPushButtonCallStudentsClicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->CallPage);
-    ui->lineEditMessage->setText("Enter the count of students");
+    ui->lineEditMessage->setText("Введите количество вызываемых студентов");
     ui->textEditInput->setFocus();
     ui->pushButtonBackClicked->setVisible(true);
 }
@@ -101,7 +101,7 @@ void MainWindow::onPushButtonSaveDataClicked()
 
 void MainWindow::onPushButtonBackClicked()
 {
-    ui->lineEditMessage->setText("Сhoice the action");
+    ui->lineEditMessage->setText("Выберете действие");
     ui->stackedWidget->setCurrentWidget(ui->ChoicePage);
     ui->pushButtonBackClicked->setVisible(false);
     flag = "";
@@ -112,7 +112,7 @@ void MainWindow::onPushButtonNextClicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->ChoicePage);
     ui->pushButtonNextClicked->setVisible(false);
-    ui->lineEditMessage->setText("Сhoice the action");
+    ui->lineEditMessage->setText("Выберете действие");
     database.updateNumbersByName(calls.getCalls());
 }
 
@@ -132,7 +132,7 @@ void MainWindow::setupMissingTable()
         nameItem->setFont(font);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         ui->tableWidget->setItem(i, 0, nameItem);
-        QPushButton *button = new QPushButton("absent");
+        QPushButton *button = new QPushButton("Отсутствует");
         button->setProperty("studentName", name);
         connect(button, &QPushButton::clicked, this, &MainWindow::onMissingTableButtonClicked);
         ui->tableWidget->setCellWidget(i, 1, button);
