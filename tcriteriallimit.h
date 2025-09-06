@@ -6,20 +6,20 @@
 class TCriteriaLimit
 {
 private:
-	std::string lab_name;
-	std::map <std::string, int> limit_point; // <crit_name, max_point>
+    QString lab_name;
+    QMap <QString, int> limit_point; // <crit_name, max_point>
 
 public:
 	TCriteriaLimit();
-	TCriteriaLimit(TDatabase& db, std::string lab_name_);
+    TCriteriaLimit(TDatabase& db, QString lab_name_);
 
 	~TCriteriaLimit();
 
-	int GetMaxPoint(std::string crit_name_);
-	std::string GetLabName();
+    int GetMaxPoint(QString crit_name_);
+    QString GetLabName();
 
-	void SetMaxPoint(std::string crit_name_, int max_point_); //edit criteria
-	void SetCriteria(std::string crit_name_, int max_point_); //creat new criteria
+    void SetMaxPoint(QString crit_name_, int max_point_); //edit criteria
+    void SetCriteria(QString crit_name_, int max_point_); //creat new criteria
 };
 
 

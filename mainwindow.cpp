@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::call_students()
 {
-    std::vector<std::string> names = calls.getNamesWithoutMissings();
+    QVector<QString> names = calls.getNamesWithoutMissings();
     size_t max = names.size(), stud = 0;
     ui->textEditOutput->clear();
     stud = ui->textEditInput->toPlainText().toInt();
@@ -42,11 +42,11 @@ void MainWindow::call_students()
         ui->statusbar->showMessage("Error count");
         return;
     }
-    std::vector<std::string> names_2;
+    QVector<QString> names_2;
     names_2 = calls.getNamesKDoske(stud);
     for (size_t i = 0; i < stud ; i++)
     {
-        ui->textEditOutput->append(QString::fromStdString(names_2[i]));
+        ui->textEditOutput->append(names_2[i]);
     }
     database.updateNumbersByName(calls.getCalls());
 }
@@ -123,17 +123,17 @@ void MainWindow::setupMissingTable()
     ui->tableWidget->setColumnWidth(0, 300);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    std::vector<std::string> names = calls.getNames();
+    QVector<QString> names = calls.getNames();
     for (const auto& name : names)
     {
-        QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(name));
+        QTableWidgetItem *nameItem = new QTableWidgetItem(name);
         QFont font = nameItem->font();
         font.setPointSize(12);
         nameItem->setFont(font);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         ui->tableWidget->setItem(i, 0, nameItem);
         QPushButton *button = new QPushButton("absent");
-        button->setProperty("studentName", QString::fromStdString(name));
+        button->setProperty("studentName", name);
         connect(button, &QPushButton::clicked, this, &MainWindow::onMissingTableButtonClicked);
         ui->tableWidget->setCellWidget(i, 1, button);
         i++;
@@ -142,7 +142,7 @@ void MainWindow::setupMissingTable()
 
 void MainWindow::setupChangedPointsTable()
 {
-    std::vector<std::string> names = calls.getNamesWithoutMissings();
+    QVector<QString> names = calls.getNamesWithoutMissings();
     ui->tableWidget_2->setRowCount(names.size());
     ui->tableWidget_2->setColumnWidth(0, 300);
     ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
@@ -150,7 +150,7 @@ void MainWindow::setupChangedPointsTable()
     ui->tableWidget_2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     for (size_t i = 0; i < names.size(); ++i)
     {
-        QTableWidgetItem *nameItem = new QTableWidgetItem(QString::fromStdString(names[i]));
+        QTableWidgetItem *nameItem = new QTableWidgetItem(names[i]);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         QFont font = nameItem->font();
         font.setPointSize(12);
@@ -160,7 +160,7 @@ void MainWindow::setupChangedPointsTable()
         callItem->setFont(font);
         callItem->setFlags(callItem->flags() & ~Qt::ItemIsEditable);
         QPushButton *button = new QPushButton(flag);
-        button->setProperty("studentName", QString::fromStdString(names[i]));
+        button->setProperty("studentName", names[i]);
         ui->tableWidget_2->setItem(i, 1, callItem);
         connect(button, &QPushButton::clicked, this,&MainWindow::onChangedPointsTableButtonClicked);
         ui->tableWidget_2->setCellWidget(i, 2, button);
@@ -169,7 +169,7 @@ void MainWindow::setupChangedPointsTable()
 
 void MainWindow::updateChangedPointsTable()
 {
-    std::vector<std::string> names = calls.getNamesWithoutMissings();
+    QVector<QString> names = calls.getNamesWithoutMissings();
     for (size_t i = 0; i < names.size(); ++i) {
         QTableWidgetItem *callItem = ui->tableWidget_2->item(i, 1);
         if (callItem) {
@@ -207,7 +207,7 @@ void MainWindow::onMissingTableButtonClicked()
     QPushButton *button = qobject_cast<QPushButton*>(sender());
     if (!button) return;
     QString studentName = button->property("studentName").toString();
-    calls.setMissings(studentName.toStdString());
+    calls.setMissings(studentName);
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         if (ui->tableWidget->cellWidget(row, 1) == button) {
             QTableWidgetItem* nameItem = ui->tableWidget->item(row, 0);
@@ -229,9 +229,9 @@ void MainWindow::onChangedPointsTableButtonClicked()
 
     QString studentName = button->property("studentName").toString();
     if(flag == "+")
-        calls.setCallsByName(studentName.toStdString(),1);
-    else if((flag == "-") && (calls.getPoints(studentName.toStdString()) > 0))
-        calls.setCallsByName(studentName.toStdString(),-1);
+        calls.setCallsByName(studentName,1);
+    else if((flag == "-") && (calls.getPoints(studentName) > 0))
+        calls.setCallsByName(studentName,-1);
     else
         ui->statusbar->showMessage("Error");
     updateChangedPointsTable();
