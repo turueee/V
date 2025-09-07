@@ -317,16 +317,20 @@ QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
 {
     QSqlQuery query(db);
     QVector<QString> labs;
+
     query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
     query.addBindValue(group_name);
-    query.next();
+
     int group_id = query.value(0).toInt();
-    query.finish();
 
     query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
     query.addBindValue(group_id);
-    while (query.next())
-        labs.push_back(query.value(0).toString());
+
+
+    while (query.next()) {
+        labs.append(query.value(0).toString());
+    }
+
     return labs;
 }
 
@@ -412,6 +416,7 @@ bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString&
         query.prepare("DELETE FROM labs WHERE group_id = ? AND lab_name = ?");
         query.addBindValue(group_id);
         query.addBindValue(old_name);
+        deleteCriteriasForLab(old_name);
         if (!query.exec()) {
             qDebug() << "Ошибка удаления записи:" << query.lastError().text();
         }
@@ -426,5 +431,33 @@ bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString&
             qDebug() << "Ошибка добавления записи:" << query.lastError().text();
         }
     }
+    return true;
+}
+
+bool TDatabase::deleteCriteriasForLab(const QString& lab_name)
+{
+    QVector<int> criterias_id;
+    QSqlQuery query(db);
+
+    int lab_id = getLabIdByName(lab_name);
+
+    query.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ?");
+    query.addBindValue(lab_id);
+    query.exec();
+
+    while(query.next())
+        criterias_id.append(query.value(0).toInt());
+
+    for (int criteria_id : criterias_id)
+    {
+        query.prepare("DELETE FROM points WHERE criteria_id = ?");
+        query.addBindValue(criteria_id);
+        query.exec();
+    }
+
+    query.prepare("DELETE FROM criterias WHERE lab_id = ?");
+    query.addBindValue(lab_id);
+    query.exec();
+
     return true;
 }

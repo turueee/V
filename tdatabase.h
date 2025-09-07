@@ -33,7 +33,6 @@ public:
     bool insertGroup(const QString& group_name, int group_id);
 
 
-
     QMap<QString, size_t> readTableToCallsMap();
     QMap<QString, int> selectLabCriteriaLimits(const QString& lab_name);
     QMap<QString, int> selectNamePointsLab(const QString& lab_name, const QString& name);
@@ -42,6 +41,8 @@ public:
     bool updateNumbersByName(const QMap<QString, size_t>& newData);
     bool updateGroupByName(const QString& name, int group_id);
     bool updateLabNames (const QVector<QString>& lab_names,const QString& group_name);
+
+    bool deleteCriteriasForLab(const QString& lab_name);
 
     bool isOpen() const { return db.isOpen(); }
     QString lastError() const { return db.lastError().text(); }
