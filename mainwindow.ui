@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>768</width>
+    <height>697</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="pushButtonBackClicked">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>back</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pushButtonNextClicked">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>next</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QLineEdit" name="lineEditMessage">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="StartPage">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="minimumSize">
+           <size>
+            <width>500</width>
+            <height>470</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>500</width>
+            <height>470</height>
+           </size>
+          </property>
+          <column>
+           <property name="text">
+            <string>имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>действие</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="ChangedPointPage">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTableWidget" name="tableWidget_2">
+          <property name="minimumSize">
+           <size>
+            <width>500</width>
+            <height>470</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>500</width>
+            <height>470</height>
+           </size>
+          </property>
+          <column>
+           <property name="text">
+            <string>имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>вызов</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>действие</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="ChoicePage">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pushButtonMinusPoint">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Minus point</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButtonCallStudents">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Call students</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pushButtonPlusPoint">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Plus point</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pushButtonSaveData">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>200</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Save data and end program</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="CallPage">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QTextEdit" name="textEditOutput">
+          <property name="minimumSize">
+           <size>
+            <width>700</width>
+            <height>350</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>700</width>
+            <height>400</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QTextEdit" name="textEditInput">
+          <property name="minimumSize">
+           <size>
+            <width>700</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>700</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>768</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

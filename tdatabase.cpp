@@ -1,0 +1,380 @@
+#include "tdatabase.h"
+#include <QDebug>
+#include <QFile>
+#include <QVariant>
+#include <QTextCodec>
+
+TDatabase::TDatabase(const QString& dbName)
+{
+    // Устанавливаем кодировку UTF-8 для поддержки русского языка
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(dbName);
+
+    qDebug() << "Путь к базе данных:" << dbName;
+    qDebug() << "База данных существует:" << QFile::exists(dbName);
+
+    if (!db.open()) {
+        qDebug() << "Ошибка открытия:" << db.lastError().text();
+        throw std::runtime_error("Не удалось открыть базу данных");
+    }
+
+    // Устанавливаем кодировку UTF-8 для базы данных
+    QSqlQuery query(db);
+    query.exec("PRAGMA encoding = 'UTF-8'");
+    query.exec("PRAGMA foreign_keys = ON");
+
+    qDebug() << "База данных успешно открыта";
+}
+
+TDatabase::~TDatabase()
+{
+    if (db.isOpen()) {
+        db.close();
+    }
+}
+
+bool TDatabase::executeQuery(const QString& query)
+{
+    QSqlQuery sqlQuery(db);
+    return sqlQuery.exec(query);
+}
+
+bool TDatabase::createCallsTable()
+{
+    QString query =
+        "CREATE TABLE IF NOT EXISTS users ("
+        "user_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "name TEXT NOT NULL, "
+        "group_id INTEGER, "
+        "calls INTEGER DEFAULT 0, "
+        "all_points INTEGER DEFAULT 0);";
+
+    return executeQuery(query);
+}
+
+bool TDatabase::createGroupTable()
+{
+    QString query =
+        "CREATE TABLE IF NOT EXISTS groups ("
+        "group_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "group_name TEXT NOT NULL);";
+
+    return executeQuery(query);
+}
+
+bool TDatabase::createLabTable()
+{
+    QString query =
+        "CREATE TABLE IF NOT EXISTS labs ("
+        "lab_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "lab_name TEXT NOT NULL);";
+
+    return executeQuery(query);
+}
+
+bool TDatabase::createCriteriaTable()
+{
+    QString query =
+        "CREATE TABLE IF NOT EXISTS criterias ("
+        "criteria_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "criteria_name TEXT NOT NULL,"
+        "lab_id INTEGER,"
+        "max_points INTEGER);";
+
+    return executeQuery(query);
+}
+
+bool TDatabase::createPointsTable()
+{
+    QString query =
+        "CREATE TABLE IF NOT EXISTS points ("
+        "point_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "id INTEGER, "
+        "criteria_id INTEGER,"
+        "point INTEGER);";
+
+    return executeQuery(query);
+}
+
+bool TDatabase::insertCallsFromMap(const QMap<QString, size_t>& calls)
+{
+    if (calls.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("INSERT INTO users (name, calls) VALUES (?, ?)")) {
+        return false;
+    }
+
+    if (!db.transaction()) {
+        return false;
+    }
+
+    int successCount = 0;
+    for (auto it = calls.constBegin(); it != calls.constEnd(); ++it) {
+        query.addBindValue(it.key());
+        query.addBindValue(static_cast<int>(it.value()));
+
+        if (query.exec()) {
+            successCount++;
+        }
+        query.finish();
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        return false;
+    }
+
+    return successCount == calls.size();
+}
+
+bool TDatabase::insertLabName(const QString& name)
+{
+    if (name.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("INSERT INTO labs (lab_name) VALUES (?)")) {
+        return false;
+    }
+
+    query.addBindValue(name);
+    return query.exec() && query.numRowsAffected() > 0;
+}
+
+int TDatabase::getLabIdByName(const QString& lab_name)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT lab_id FROM labs WHERE lab_name = ?");
+    query.addBindValue(lab_name);
+
+    if (!query.exec() || !query.next()) {
+        // Если лаборатория не найдена, создаем ее
+        if (insertLabName(lab_name)) {
+            return query.lastInsertId().toInt();
+        }
+        return -1;
+    }
+
+    return query.value(0).toInt();
+}
+
+bool TDatabase::insertCriteriaName(const QString& criteria_name, const QString& lab_name, int max_point)
+{
+    int lab_id = getLabIdByName(lab_name);
+    if (lab_id == -1) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("INSERT INTO criterias (criteria_name, max_points, lab_id) VALUES (?, ?, ?)")) {
+        return false;
+    }
+
+    query.addBindValue(criteria_name);
+    query.addBindValue(max_point);
+    query.addBindValue(lab_id);
+
+    return query.exec() && query.numRowsAffected() > 0;
+}
+
+bool TDatabase::insertCriteriaNameFromMap(const QMap<QString, int>& criteriaslimits, const QString& lab_name)
+{
+    if (criteriaslimits.isEmpty()) {
+        return false;
+    }
+
+    int lab_id = getLabIdByName(lab_name);
+    if (lab_id == -1) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("INSERT INTO criterias (criteria_name, max_points, lab_id) VALUES (?, ?, ?)")) {
+        return false;
+    }
+
+    if (!db.transaction()) {
+        return false;
+    }
+
+    int successCount = 0;
+    for (auto it = criteriaslimits.constBegin(); it != criteriaslimits.constEnd(); ++it) {
+        query.addBindValue(it.key());
+        query.addBindValue(it.value());
+        query.addBindValue(lab_id);
+
+        if (query.exec()) {
+            successCount++;
+        }
+        query.finish();
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        return false;
+    }
+
+    return successCount == criteriaslimits.size();
+}
+
+QMap<QString, size_t> TDatabase::readTableToCallsMap()
+{
+    QMap<QString, size_t> resultMap;
+
+    QSqlQuery query("SELECT name, calls FROM users", db);
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString name = query.value(0).toString();
+            size_t calls = static_cast<size_t>(query.value(1).toUInt());
+            resultMap[name] = calls;
+        }
+    }
+
+    return resultMap;
+}
+
+QMap<QString, int> TDatabase::selectLabCriteriaLimits(const QString& lab_name)
+{
+    QMap<QString, int> resultMap;
+
+    int lab_id = getLabIdByName(lab_name);
+    if (lab_id == -1) {
+        return resultMap;
+    }
+
+    QSqlQuery query(db);
+    query.prepare("SELECT criteria_name, max_points FROM criterias WHERE lab_id = ?");
+    query.addBindValue(lab_id);
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString criteria_name = query.value(0).toString();
+            int max_points = query.value(1).toInt();
+            resultMap[criteria_name] = max_points;
+        }
+    }
+
+    return resultMap;
+}
+
+QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const QString& name)
+{
+    QMap<QString, int> resultMap;
+    QVector<int> criterias;
+
+    // Получаем ID лаборатории
+    int lab_id = getLabIdByName(lab_name);
+    if (lab_id == -1) {
+        return resultMap;
+    }
+
+    // Получаем все критерии для лаборатории
+    QSqlQuery criteriaQuery(db);
+    criteriaQuery.prepare("SELECT criteria_id, criteria_name FROM criterias WHERE lab_id = ?");
+    criteriaQuery.addBindValue(lab_id);
+
+    if (!criteriaQuery.exec()) {
+        return resultMap;
+    }
+
+    // Получаем ID пользователя
+    QSqlQuery userQuery(db);
+    userQuery.prepare("SELECT user_id FROM users WHERE name = ?");
+    userQuery.addBindValue(name);
+
+    if (!userQuery.exec() || !userQuery.next()) {
+        return resultMap;
+    }
+    int user_id = userQuery.value(0).toInt();
+
+    // Получаем баллы для каждого критерия
+    QSqlQuery pointsQuery(db);
+    pointsQuery.prepare("SELECT point FROM points WHERE id = ? AND criteria_id = ?");
+
+    while (criteriaQuery.next()) {
+        int criteria_id = criteriaQuery.value(0).toInt();
+        QString criteria_name = criteriaQuery.value(1).toString();
+
+        pointsQuery.addBindValue(user_id);
+        pointsQuery.addBindValue(criteria_id);
+
+        if (pointsQuery.exec() && pointsQuery.next()) {
+            int points = pointsQuery.value(0).toInt();
+            resultMap[criteria_name] = points;
+        }
+        pointsQuery.finish();
+    }
+
+    return resultMap;
+}
+
+bool TDatabase::updateNumbersByName(const QMap<QString, size_t>& newData)
+{
+    if (!db.isOpen() || newData.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("UPDATE users SET calls = ? WHERE name = ?")) {
+        return false;
+    }
+
+    if (!db.transaction()) {
+        return false;
+    }
+
+    int updatedCount = 0;
+    for (auto it = newData.constBegin(); it != newData.constEnd(); ++it) {
+        query.addBindValue(static_cast<int>(it.value()));
+        query.addBindValue(it.key());
+
+        if (query.exec() && query.numRowsAffected() > 0) {
+            updatedCount++;
+        }
+        query.finish();
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        return false;
+    }
+
+    return updatedCount > 0;
+}
+
+bool TDatabase::updateGroupByName(const QString& name, int group_id)
+{
+    if (!db.isOpen() || name.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.prepare("UPDATE users SET group_id = ? WHERE name = ?")) {
+        return false;
+    }
+
+    query.addBindValue(group_id);
+    query.addBindValue(name);
+
+    return query.exec() && query.numRowsAffected() > 0;
+}
+
+bool TDatabase::insertGroup(const QString& group_name, int group_id)
+{
+    QSqlQuery query(db);
+    if (!query.prepare("INSERT INTO groups (group_name, group_id) VALUES (?, ?)")) {
+        return false;
+    }
+
+    query.addBindValue(group_name);
+    query.addBindValue(group_id);
+
+    return query.exec();
+}
