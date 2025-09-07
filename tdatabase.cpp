@@ -132,18 +132,20 @@ bool TDatabase::insertCallsFromMap(const QMap<QString, size_t>& calls)
     return successCount == calls.size();
 }
 
-bool TDatabase::insertLabName(const QString& name)
+bool TDatabase::insertLabName(const QString& name,const QString& group_name)
 {
     if (name.isEmpty()) {
         return false;
     }
+    int group_id = getLabIdByName(group_name);
 
     QSqlQuery query(db);
-    if (!query.prepare("INSERT INTO labs (lab_name) VALUES (?)")) {
+    if (!query.prepare("INSERT INTO labs (lab_name,group_id) VALUES (?,?)")) {
         return false;
     }
 
     query.addBindValue(name);
+    query.addBindValue(group_id);
     return query.exec() && query.numRowsAffected() > 0;
 }
 
@@ -152,15 +154,14 @@ int TDatabase::getLabIdByName(const QString& lab_name)
     QSqlQuery query(db);
     query.prepare("SELECT lab_id FROM labs WHERE lab_name = ?");
     query.addBindValue(lab_name);
+    return query.value(0).toInt();
+}
 
-    if (!query.exec() || !query.next()) {
-        // Если лаборатория не найдена, создаем ее
-        if (insertLabName(lab_name)) {
-            return query.lastInsertId().toInt();
-        }
-        return -1;
-    }
-
+int TDatabase::getGroupIdByName(const QString& group_name)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
+    query.addBindValue(group_name);
     return query.value(0).toInt();
 }
 
@@ -275,7 +276,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
         return resultMap;
     }
 
-    // Получаем все критерии для лаборатории
     QSqlQuery criteriaQuery(db);
     criteriaQuery.prepare("SELECT criteria_id, criteria_name FROM criterias WHERE lab_id = ?");
     criteriaQuery.addBindValue(lab_id);
@@ -284,7 +284,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
         return resultMap;
     }
 
-    // Получаем ID пользователя
     QSqlQuery userQuery(db);
     userQuery.prepare("SELECT user_id FROM users WHERE name = ?");
     userQuery.addBindValue(name);
@@ -294,7 +293,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     }
     int user_id = userQuery.value(0).toInt();
 
-    // Получаем баллы для каждого критерия
     QSqlQuery pointsQuery(db);
     pointsQuery.prepare("SELECT point FROM points WHERE id = ? AND criteria_id = ?");
 
@@ -313,6 +311,23 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     }
 
     return resultMap;
+}
+
+QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
+{
+    QSqlQuery query(db);
+    QVector<QString> labs;
+    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
+    query.addBindValue(group_name);
+    query.next();
+    int group_id = query.value(0).toInt();
+    query.finish();
+
+    query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
+    query.addBindValue(group_id);
+    while (query.next())
+        labs.push_back(query.value(0).toString());
+    return labs;
 }
 
 bool TDatabase::updateNumbersByName(const QMap<QString, size_t>& newData)
@@ -377,4 +392,39 @@ bool TDatabase::insertGroup(const QString& group_name, int group_id)
     query.addBindValue(group_id);
 
     return query.exec();
+}
+
+bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString& group_name)
+{
+    QVector<QString> old_names = selectLabsNameForGroup(group_name), new_names(lab_names);
+
+    for (QString old_name: old_names)
+        for (QString new_name:new_names)
+            if (new_name == old_name)
+            {
+                old_names.removeAll(new_name);
+                new_names.removeAll(old_name);
+            }
+    int group_id = getGroupIdByName(group_name);
+    QSqlQuery query(db);
+    for (const QString &old_name : qAsConst(old_names))
+    {
+        query.prepare("DELETE FROM labs WHERE group_id = ? AND lab_name = ?");
+        query.addBindValue(group_id);
+        query.addBindValue(old_name);
+        if (!query.exec()) {
+            qDebug() << "Ошибка удаления записи:" << query.lastError().text();
+        }
+    }
+
+    for (const QString &new_name : qAsConst(new_names))
+    {
+        query.prepare("INSERT INTO labs (lab_name, group_id) VALUES (?, ?)");
+        query.addBindValue(new_name);
+        query.addBindValue(group_id);
+        if (!query.exec()) {
+            qDebug() << "Ошибка добавления записи:" << query.lastError().text();
+        }
+    }
+    return true;
 }
