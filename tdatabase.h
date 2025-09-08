@@ -41,6 +41,7 @@ public:
     bool updateNumbersByName(const QMap<QString, size_t>& newData);
     bool updateGroupByName(const QString& name, int group_id);
     bool updateLabNames (const QVector<QString>& lab_names,const QString& group_name);
+    bool updateCriterias (const QMap<QString,int>& criterias, const QString& lab_name);
 
     bool deleteCriteriasForLab(const QString& lab_name);
 

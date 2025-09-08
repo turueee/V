@@ -461,3 +461,64 @@ bool TDatabase::deleteCriteriasForLab(const QString& lab_name)
 
     return true;
 }
+
+bool TDatabase::updateCriterias(const QMap<QString, int>& criterias, const QString& lab_name)
+{
+    QMap<QString, int> old_criterias = selectLabCriteriaLimits(lab_name);
+    QMap<QString, int> new_criterias = criterias;
+    QMap<QString, int> update_criterias;
+
+    for (auto it = old_criterias.begin(); it != old_criterias.end(); ++it) {
+        QString old_name = it.key();
+        if (new_criterias.contains(old_name)) {
+            if (it.value() != new_criterias.value(old_name)) {
+                update_criterias[old_name] = new_criterias.value(old_name);
+            }
+            old_criterias.remove(old_name);
+            new_criterias.remove(old_name);
+        }
+    }
+
+    QSqlQuery query(db);
+    int lab_id = getLabIdByName(lab_name);
+    QVector<int> criterias_id_for_delete;
+
+    for (auto it = old_criterias.begin(); it != old_criterias.end(); ++it)
+    {
+        query.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ? AND criteria_name = ?");
+        query.addBindValue(lab_id);
+        query.addBindValue(it.key());
+        query.exec();
+
+        if (query.next()) {
+            criterias_id_for_delete.append(query.value(0).toInt());
+        }
+    }
+
+    for (int criteria_id_for_delete : criterias_id_for_delete)
+    {
+        query.prepare("DELETE FROM points WHERE criteria_id = ?");
+        query.addBindValue(criteria_id_for_delete);
+        query.exec();
+
+        query.prepare("DELETE FROM criterias WHERE criteria_id = ?");
+        query.addBindValue(criteria_id_for_delete);
+        query.exec();
+    }
+
+    for (auto it = new_criterias.begin(); it != new_criterias.end(); ++it)
+    {
+        insertCriteriaName(it.key(), lab_name, it.value());
+    }
+
+    for (auto it = update_criterias.begin(); it != update_criterias.end(); ++it)
+    {
+        query.prepare("UPDATE criterias SET max_points = ? WHERE criteria_name = ? AND lab_id = ?");
+        query.addBindValue(it.value());
+        query.addBindValue(it.key());
+        query.addBindValue(lab_id);
+        query.exec();
+    }
+
+    return true;
+}
