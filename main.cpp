@@ -9,7 +9,10 @@ int main(int argc, char *argv[])
     TDatabase db("calls.db");
     TCalls c_calls(db);
 
-    MainWindow w(c_calls, db);
-    w.show();
+    QVector<QString> labs = db.selectLabsNameForGroup("3824Б1ФИ1");
+    for (const QString &lab : qAsConst(labs))
+        qDebug() << lab;
+    //MainWindow w(c_calls, db);
+    //w.show();
     return a.exec();
 }

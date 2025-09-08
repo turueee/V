@@ -154,6 +154,17 @@ int TDatabase::getLabIdByName(const QString& lab_name)
     QSqlQuery query(db);
     query.prepare("SELECT lab_id FROM labs WHERE lab_name = ?");
     query.addBindValue(lab_name);
+<<<<<<< HEAD
+=======
+    return query.value(0).toInt();
+}
+
+int TDatabase::getGroupIdByName(const QString& group_name)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
+    query.addBindValue(group_name);
+>>>>>>> fd6247086d558667c12579306955fc0ed63639e8
     return query.value(0).toInt();
 }
 
@@ -306,7 +317,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
         return resultMap;
     }
 
-    // Получаем все критерии для лаборатории
     QSqlQuery criteriaQuery(db);
     criteriaQuery.prepare("SELECT criteria_id, criteria_name FROM criterias WHERE lab_id = ?");
     criteriaQuery.addBindValue(lab_id);
@@ -315,7 +325,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
         return resultMap;
     }
 
-    // Получаем ID пользователя
     QSqlQuery userQuery(db);
     userQuery.prepare("SELECT user_id FROM users WHERE name = ?");
     userQuery.addBindValue(name);
@@ -325,7 +334,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     }
     int user_id = userQuery.value(0).toInt();
 
-    // Получаем баллы для каждого критерия
     QSqlQuery pointsQuery(db);
     pointsQuery.prepare("SELECT point FROM points WHERE id = ? AND criteria_id = ?");
 
@@ -344,6 +352,27 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     }
 
     return resultMap;
+}
+
+QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
+{
+    QSqlQuery query(db);
+    QVector<QString> labs;
+
+    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
+    query.addBindValue(group_name);
+
+    int group_id = query.value(0).toInt();
+
+    query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
+    query.addBindValue(group_id);
+
+
+    while (query.next()) {
+        labs.append(query.value(0).toString());
+    }
+
+    return labs;
 }
 
 bool TDatabase::updateNumbersByName(const QMap<QString, size_t>& newData)
@@ -408,4 +437,129 @@ bool TDatabase::insertGroup(const QString& group_name, int group_id)
     query.addBindValue(group_id);
 
     return query.exec();
+}
+
+bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString& group_name)
+{
+    QVector<QString> old_names = selectLabsNameForGroup(group_name), new_names(lab_names);
+
+    for (QString old_name: old_names)
+        for (QString new_name:new_names)
+            if (new_name == old_name)
+            {
+                old_names.removeAll(new_name);
+                new_names.removeAll(old_name);
+            }
+    int group_id = getGroupIdByName(group_name);
+    QSqlQuery query(db);
+    for (const QString &old_name : qAsConst(old_names))
+    {
+        query.prepare("DELETE FROM labs WHERE group_id = ? AND lab_name = ?");
+        query.addBindValue(group_id);
+        query.addBindValue(old_name);
+        deleteCriteriasForLab(old_name);
+        if (!query.exec()) {
+            qDebug() << "Ошибка удаления записи:" << query.lastError().text();
+        }
+    }
+
+    for (const QString &new_name : qAsConst(new_names))
+    {
+        query.prepare("INSERT INTO labs (lab_name, group_id) VALUES (?, ?)");
+        query.addBindValue(new_name);
+        query.addBindValue(group_id);
+        if (!query.exec()) {
+            qDebug() << "Ошибка добавления записи:" << query.lastError().text();
+        }
+    }
+    return true;
+}
+
+bool TDatabase::deleteCriteriasForLab(const QString& lab_name)
+{
+    QVector<int> criterias_id;
+    QSqlQuery query(db);
+
+    int lab_id = getLabIdByName(lab_name);
+
+    query.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ?");
+    query.addBindValue(lab_id);
+    query.exec();
+
+    while(query.next())
+        criterias_id.append(query.value(0).toInt());
+
+    for (int criteria_id : criterias_id)
+    {
+        query.prepare("DELETE FROM points WHERE criteria_id = ?");
+        query.addBindValue(criteria_id);
+        query.exec();
+    }
+
+    query.prepare("DELETE FROM criterias WHERE lab_id = ?");
+    query.addBindValue(lab_id);
+    query.exec();
+
+    return true;
+}
+
+bool TDatabase::updateCriterias(const QMap<QString, int>& criterias, const QString& lab_name)
+{
+    QMap<QString, int> old_criterias = selectLabCriteriaLimits(lab_name);
+    QMap<QString, int> new_criterias = criterias;
+    QMap<QString, int> update_criterias;
+
+    for (auto it = old_criterias.begin(); it != old_criterias.end(); ++it) {
+        QString old_name = it.key();
+        if (new_criterias.contains(old_name)) {
+            if (it.value() != new_criterias.value(old_name)) {
+                update_criterias[old_name] = new_criterias.value(old_name);
+            }
+            old_criterias.remove(old_name);
+            new_criterias.remove(old_name);
+        }
+    }
+
+    QSqlQuery query(db);
+    int lab_id = getLabIdByName(lab_name);
+    QVector<int> criterias_id_for_delete;
+
+    for (auto it = old_criterias.begin(); it != old_criterias.end(); ++it)
+    {
+        query.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ? AND criteria_name = ?");
+        query.addBindValue(lab_id);
+        query.addBindValue(it.key());
+        query.exec();
+
+        if (query.next()) {
+            criterias_id_for_delete.append(query.value(0).toInt());
+        }
+    }
+
+    for (int criteria_id_for_delete : criterias_id_for_delete)
+    {
+        query.prepare("DELETE FROM points WHERE criteria_id = ?");
+        query.addBindValue(criteria_id_for_delete);
+        query.exec();
+
+        query.prepare("DELETE FROM criterias WHERE criteria_id = ?");
+        query.addBindValue(criteria_id_for_delete);
+        query.exec();
+    }
+
+    for (auto it = new_criterias.begin(); it != new_criterias.end(); ++it)
+    {
+        insertCriteriaName(it.key(), lab_name, it.value());
+    }
+
+    for (auto it = update_criterias.begin(); it != update_criterias.end(); ++it)
+    {
+        query.prepare("UPDATE criterias SET max_points = ? WHERE criteria_name = ? AND lab_id = ?");
+        query.addBindValue(it.value());
+        query.addBindValue(it.key());
+        query.addBindValue(lab_id);
+        query.exec();
+    }
+
+    return true;
 }
