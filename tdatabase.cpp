@@ -132,18 +132,20 @@ bool TDatabase::insertCallsFromMap(const QMap<QString, size_t>& calls)
     return successCount == calls.size();
 }
 
-bool TDatabase::insertLabName(const QString& name)
+bool TDatabase::insertLabName(const QString& name,const QString& group_name)
 {
     if (name.isEmpty()) {
         return false;
     }
+    int group_id = getLabIdByName(group_name);
 
     QSqlQuery query(db);
-    if (!query.prepare("INSERT INTO labs (lab_name) VALUES (?)")) {
+    if (!query.prepare("INSERT INTO labs (lab_name,group_id) VALUES (?,?)")) {
         return false;
     }
 
     query.addBindValue(name);
+    query.addBindValue(group_id);
     return query.exec() && query.numRowsAffected() > 0;
 }
 
@@ -152,17 +154,10 @@ int TDatabase::getLabIdByName(const QString& lab_name)
     QSqlQuery query(db);
     query.prepare("SELECT lab_id FROM labs WHERE lab_name = ?");
     query.addBindValue(lab_name);
-
-    if (!query.exec() || !query.next()) {
-        // Если лаборатория не найдена, создаем ее
-        if (insertLabName(lab_name)) {
-            return query.lastInsertId().toInt();
-        }
-        return -1;
-    }
-
     return query.value(0).toInt();
 }
+
+
 
 bool TDatabase::insertCriteriaName(const QString& criteria_name, const QString& lab_name, int max_point)
 {
@@ -263,6 +258,42 @@ QMap<QString, int> TDatabase::selectLabCriteriaLimits(const QString& lab_name)
 
     return resultMap;
 }
+
+QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
+{
+    QSqlQuery query(db);
+    QVector<QString> labs;
+
+    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
+    query.addBindValue(group_name);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса group_id:" << query.lastError().text();
+        return labs;
+    }
+
+    if (!query.next()) {
+        qDebug() << "Группа не найдена:" << group_name;
+        return labs;
+    }
+
+    int group_id = query.value(0).toInt();
+
+    query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
+    query.addBindValue(group_id);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса lab_name:" << query.lastError().text();
+        return labs;
+    }
+
+    while (query.next()) {
+        labs.append(query.value(0).toString());
+    }
+
+    return labs;
+}
+
 
 QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const QString& name)
 {

@@ -69,13 +69,6 @@
       </item>
      </layout>
     </item>
-    <item>
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
     <item alignment="Qt::AlignHCenter">
      <widget class="QLineEdit" name="lineEditMessage">
       <property name="sizePolicy">
@@ -101,7 +94,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -139,7 +132,7 @@
          <widget class="QTableWidget" name="tableWidget_2">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>600</width>
             <height>470</height>
            </size>
           </property>
@@ -156,12 +149,17 @@
           </column>
           <column>
            <property name="text">
-            <string>вызов</string>
+            <string>баллы</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>действие</string>
+            <string>плюс</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>минус</string>
            </property>
           </column>
          </widget>
@@ -173,7 +171,7 @@
         <item>
          <layout class="QGridLayout" name="gridLayout">
           <item row="1" column="1">
-           <widget class="QPushButton" name="pushButtonMinusPoint">
+           <widget class="QPushButton" name="pushButtonLab">
             <property name="minimumSize">
              <size>
               <width>200</width>
@@ -187,7 +185,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Minus point</string>
+             <string>Lab</string>
             </property>
            </widget>
           </item>
@@ -211,7 +209,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="pushButtonPlusPoint">
+           <widget class="QPushButton" name="pushButtonChangedPoint">
             <property name="minimumSize">
              <size>
               <width>200</width>
@@ -225,7 +223,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Plus point</string>
+             <string>Plus/Minus point</string>
             </property>
            </widget>
           </item>
@@ -285,6 +283,218 @@
            </size>
           </property>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="LabPage">
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QPushButton" name="pushButtonCansel">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>отменить</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>400</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>500</height>
+               </size>
+              </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>198</width>
+                 <height>498</height>
+                </rect>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayoutNames"/>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QScrollArea" name="scrollArea_2">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>400</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>500</height>
+               </size>
+              </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_2">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>198</width>
+                 <height>498</height>
+                </rect>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayoutLabNames"/>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonCreateLab">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string> Create</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonChangedLab">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Changed</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonDeleteLab">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Delete</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>

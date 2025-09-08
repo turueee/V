@@ -5,6 +5,7 @@
 #include <QString>
 #include <QKeyEvent>
 #include <QPushButton>
+#include <QButtonGroup>
 #include <QHeaderView>
 #include <QRandomGenerator>
 #include <QDebug>
@@ -33,21 +34,31 @@ public:
     void setupMissingTable();
     void setupChangedPointsTable();
     void updateChangedPointsTable();
-    void onPushButtonColorTopic();
+    void setupNamesTable();
+    void setupLabTable();
 private slots:
+    void onPushButtonColorTopic();
     void onPushButtonCallStudentsClicked();
-    void onPushButtonMinusPointClicked();
-    void onPushButtonPlusPointClicked();
+    void onPushButtonChangedPointClicked();
+    void onPushButtonLabClicked();
+    void onPushButtonLabNamesClicked();
+    void onPushButtonCancelActiveClicked();
     void onPushButtonSaveDataClicked();
     void onPushButtonBackClicked();
     void onPushButtonNextClicked();
-    void onMissingTableButtonClicked();
-    void onChangedPointsTableButtonClicked();
+    void onPushButtonMissingTableClicked();
+    void onPushButtonChangedPointsTableClicked();
+    void onPushButtonNamesClicked();
+    void onPushButtonCreateLabClicked();
+    void onPushButtonChangedLabClicked();
+    void onPushButtonDeleteLabClicked();
 signals:
     void qonKeyBoardEnterClicked();
 private:
     Ui::MainWindow *ui;
     QString flag;
+    QButtonGroup studentButtonGroup;
+    QButtonGroup labButtonGroup;
     TCalls calls;
     TDatabase database;
 };

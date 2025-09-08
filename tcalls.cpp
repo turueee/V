@@ -16,7 +16,7 @@ QVector<QString> TCalls::getNames()
     return result;
 }
 
-void TCalls::setCallsByName(QString name, size_t points)
+void TCalls::setCallsByName(QString name, int points)
 {
     if (calls.find(name)!=calls.end())
         calls[name]+=points;

@@ -21,7 +21,7 @@ public:
     QMap<QString, size_t> getCalls();
     void setCalls(QMap<QString, size_t> calls_);
     QVector<QString> getNamesKDoske(size_t stud);
-    void setCallsByName(QString name, size_t points);
+    void setCallsByName(QString name, int points);
     void setMissings(QString missings_);
     size_t getPoints(QString name);
 };
