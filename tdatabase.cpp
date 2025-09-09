@@ -137,7 +137,7 @@ bool TDatabase::insertLabName(const QString& name,const QString& group_name)
     if (name.isEmpty()) {
         return false;
     }
-    int group_id = getLabIdByName(group_name);
+    int group_id = getGroupIdByName(group_name);
 
     QSqlQuery query(db);
     if (!query.prepare("INSERT INTO labs (lab_name,group_id) VALUES (?,?)")) {
@@ -154,8 +154,17 @@ int TDatabase::getLabIdByName(const QString& lab_name)
     QSqlQuery query(db);
     query.prepare("SELECT lab_id FROM labs WHERE lab_name = ?");
     query.addBindValue(lab_name);
-<<<<<<< HEAD
-=======
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса:" << query.lastError().text();
+        return -1;
+    }
+
+    if (!query.next()) {
+        qDebug() << "Лабораторная работа не найдена:" << lab_name;
+        return -1;
+    }
+
     return query.value(0).toInt();
 }
 
@@ -164,7 +173,17 @@ int TDatabase::getGroupIdByName(const QString& group_name)
     QSqlQuery query(db);
     query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
     query.addBindValue(group_name);
->>>>>>> fd6247086d558667c12579306955fc0ed63639e8
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса group_id:" << query.lastError().text();
+        return false;
+    }
+
+    if (!query.next()) {
+        qDebug() << "Группа не найдена:" << group_name;
+        return false;
+    }
+
     return query.value(0).toInt();
 }
 
@@ -289,6 +308,7 @@ QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
     }
 
     int group_id = query.value(0).toInt();
+    qDebug()<<group_id;
 
     query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
     query.addBindValue(group_id);
@@ -354,26 +374,6 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     return resultMap;
 }
 
-QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
-{
-    QSqlQuery query(db);
-    QVector<QString> labs;
-
-    query.prepare("SELECT group_id FROM groups WHERE group_name = ?");
-    query.addBindValue(group_name);
-
-    int group_id = query.value(0).toInt();
-
-    query.prepare("SELECT lab_name FROM labs WHERE group_id = ?");
-    query.addBindValue(group_id);
-
-
-    while (query.next()) {
-        labs.append(query.value(0).toString());
-    }
-
-    return labs;
-}
 
 bool TDatabase::updateNumbersByName(const QMap<QString, size_t>& newData)
 {
