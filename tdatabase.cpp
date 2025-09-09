@@ -454,10 +454,11 @@ bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString&
     QSqlQuery query(db);
     for (const QString &old_name : qAsConst(old_names))
     {
+        deleteCriteriasForLab(old_name);
         query.prepare("DELETE FROM labs WHERE group_id = ? AND lab_name = ?");
         query.addBindValue(group_id);
         query.addBindValue(old_name);
-        deleteCriteriasForLab(old_name);
+
         if (!query.exec()) {
             qDebug() << "Ошибка удаления записи:" << query.lastError().text();
         }
@@ -500,6 +501,20 @@ bool TDatabase::deleteCriteriasForLab(const QString& lab_name)
     query.addBindValue(lab_id);
     query.exec();
 
+    return true;
+}
+
+bool TDatabase::deleteLab(const QString& lab_name,const QString& group_name)
+{
+    deleteCriteriasForLab(lab_name);
+    QSqlQuery query(db);
+    query.prepare("DELETE FROM labs WHERE group_id = ? AND lab_name = ?");
+    query.addBindValue(getGroupIdByName(group_name));
+    query.addBindValue(lab_name);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка удаления записи:" << query.lastError().text();
+    }
     return true;
 }
 

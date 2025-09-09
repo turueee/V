@@ -48,6 +48,7 @@ public:
     bool updateCriterias (const QMap<QString,int>& criterias, const QString& lab_name);
 
     bool deleteCriteriasForLab(const QString& lab_name);
+    bool deleteLab(const QString& lab_name, const QString& group_name);
 
     bool isOpen() const { return db.isOpen(); }
     QString lastError() const { return db.lastError().text(); }
