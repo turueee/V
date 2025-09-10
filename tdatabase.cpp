@@ -149,6 +149,16 @@ bool TDatabase::insertLabName(const QString& name,const QString& group_name)
     return query.exec() && query.numRowsAffected() > 0;
 }
 
+int TDatabase::getIdByName(const QString& name)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT id FROM users WHERE name = ?");
+    query.addBindValue(name);
+    query.exec();
+    query.next();
+    return query.value(0).toInt();
+}
+
 int TDatabase::getLabIdByName(const QString& lab_name)
 {
     QSqlQuery query(db);
@@ -187,6 +197,19 @@ int TDatabase::getGroupIdByName(const QString& group_name)
     return query.value(0).toInt();
 }
 
+int TDatabase::getCriteriaIdByName(const QString& criteria_name,const QString& lab_name)
+{
+    int lab_id = getLabIdByName(lab_name);
+    QSqlQuery query(db);
+    query.prepare("SELECT criteria_id FROM criterias WHERE criteria_name = ? AND lab_id = ?");
+    query.addBindValue(criteria_name);
+    query.addBindValue(lab_id);
+    query.exec();
+    query.next();
+
+    return query.value(0).toInt();
+}
+
 
 
 bool TDatabase::insertCriteriaName(const QString& criteria_name, const QString& lab_name, int max_point)
@@ -204,6 +227,9 @@ bool TDatabase::insertCriteriaName(const QString& criteria_name, const QString& 
     query.addBindValue(criteria_name);
     query.addBindValue(max_point);
     query.addBindValue(lab_id);
+    QVector<QString> names = selectNamesByGroup("3824Б1ФИ1");
+    for (QString name:names)
+        insertCriteriaPoint(criteria_name,name,lab_name);
 
     return query.exec() && query.numRowsAffected() > 0;
 }
@@ -374,6 +400,32 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     return resultMap;
 }
 
+QVector<int> TDatabase::selectNamesIdByGroup(const QString& group_name)
+{
+    int group_id = getGroupIdByName(group_name);
+    QSqlQuery query(db);
+    query.prepare("SELECT id FROM users WHERE group_id = ?");
+    query.addBindValue(group_id);
+    query.exec();
+    QVector<int> names;
+    while(query.next())
+        names.push_back(query.value(0).toInt());
+     return names;
+}
+
+QVector<QString> TDatabase::selectNamesByGroup(const QString& group_name)
+{
+    int group_id = getGroupIdByName(group_name);
+    QSqlQuery query(db);
+    query.prepare("SELECT name FROM users WHERE group_id = ?");
+    query.addBindValue(group_id);
+    query.exec();
+    QVector<QString> names;
+    while(query.next())
+        names.push_back(query.value(0).toString());
+    return names;
+}
+
 
 bool TDatabase::updateNumbersByName(const QMap<QString, size_t>& newData)
 {
@@ -437,6 +489,18 @@ bool TDatabase::insertGroup(const QString& group_name, int group_id)
     query.addBindValue(group_id);
 
     return query.exec();
+}
+
+bool TDatabase::insertCriteriaPoint(const QString& criteria_name, const QString& name,const QString& lab_name)
+{
+    int criteria_id = getCriteriaIdByName(criteria_name,lab_name);
+    int id = getIdByName(name);
+    QSqlQuery query(db);
+    query.prepare("INSERT INTO points (point_krit,criteria_id,id) VALUES (0,?,?)");
+    query.addBindValue(criteria_id);
+    query.addBindValue(id);
+    query.exec();
+    return true;
 }
 
 bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString& group_name)

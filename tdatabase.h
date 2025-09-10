@@ -33,12 +33,14 @@ public:
     bool insertCriteriaName(const QString& criteria_name, const QString& lab_name, int max_point);
     bool insertCriteriaNameFromMap(const QMap<QString, int>& criteriaslimits, const QString& lab_name);
     bool insertGroup(const QString& group_name, int group_id);
+    bool insertCriteriaPoint(const QString& criteria_name, const QString& name,const QString& lab_name);
 
 
     QMap<QString, size_t> readTableToCallsMap();
     QMap<QString, int> selectLabCriteriaLimits(const QString& lab_name);
     QMap<QString, int> selectNamePointsLab(const QString& lab_name, const QString& name);
-
+    QVector<int> selectNamesIdByGroup(const QString& group_name);
+    QVector<QString> selectNamesByGroup(const QString& group_name);
     QVector<QString> selectLabsNameForGroup(const QString& group_name);
 
 
@@ -54,8 +56,10 @@ public:
     QString lastError() const { return db.lastError().text(); }
 private:
     bool executeQuery(const QString& query);
+    int getIdByName(const QString& name);
     int getLabIdByName(const QString& lab_name);
     int getGroupIdByName(const QString& group_name);
+    int getCriteriaIdByName(const QString& criteria_name,const QString& lab_name);
 };
 
 #endif // TDATABASE_H
