@@ -582,6 +582,31 @@ bool TDatabase::deleteLab(const QString& lab_name,const QString& group_name)
     return true;
 }
 
+bool TDatabase::deleteCriteria(const QString& lab_name, const QString& criteria_name)
+{
+    QSqlQuery query(db);
+
+    int lab_id = getLabIdByName(lab_name);
+
+    query.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ? AND criteria_name = ?");
+    query.addBindValue(lab_id);
+    query.addBindValue(criteria_name);
+    query.exec();
+    query.next();
+    int criteria_id = query.value(0).toInt();
+
+    query.prepare("DELETE FROM points WHERE criteria_id = ?");
+    query.addBindValue(criteria_id);
+    query.exec();
+
+    query.prepare("DELETE FROM criterias WHERE lab_id = ? AND criteria_name = ?");
+    query.addBindValue(lab_id);
+    query.addBindValue(criteria_name);
+    query.exec();
+
+    return true;
+}
+
 bool TDatabase::updateCriterias(const QMap<QString, int>& criterias, const QString& lab_name)
 {
     QMap<QString, int> old_criterias = selectLabCriteriaLimits(lab_name);
@@ -640,5 +665,40 @@ bool TDatabase::updateCriterias(const QMap<QString, int>& criterias, const QStri
         query.exec();
     }
 
+    return true;
+}
+
+bool TDatabase::updateLabName(const QString& old_name,const QString& new_name)
+{
+    QSqlQuery query(db);
+    query.prepare("UPDATE labs SET lab_name = ? WHERE lab_name = ?");
+    query.addBindValue(new_name);
+    query.addBindValue(old_name);
+    query.exec();
+    return true;
+}
+
+bool TDatabase::updateCriteriaName(const QString& lab_name,const QString& old_name,const QString& new_name)
+{
+    int lab_id = getLabIdByName(lab_name);
+    QSqlQuery query(db);
+    query.prepare("UPDATE criterias SET criteria_name = ? WHERE lab_id = ? AND criteria_name = ?");
+    query.addBindValue(new_name);
+    query.addBindValue(lab_id);
+    query.addBindValue(old_name);
+    query.exec();
+    return true;
+}
+
+bool TDatabase::updateCriteriaMaxPoint(const QString& lab_name,const QString& criteria_name,int new_max_point)
+{
+    int lab_id = getLabIdByName(lab_name);
+    QSqlQuery query(db);
+    query.prepare("UPDATE criterias SET max_points = ? WHERE lab_id = ? AND criteria_name = ?");
+    query.addBindValue(new_max_point);
+    query.addBindValue(lab_id);
+    query.addBindValue(criteria_name);
+    query.exec();
+    //Когда буду писать апдейты для поинтов допишу
     return true;
 }
