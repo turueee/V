@@ -48,9 +48,13 @@ public:
     bool updateGroupByName(const QString& name, int group_id);
     bool updateLabNames (const QVector<QString>& lab_names,const QString& group_name);
     bool updateCriterias (const QMap<QString,int>& criterias, const QString& lab_name);
+    bool updateLabName(const QString& old_name,const QString& new_name);
+    bool updateCriteriaName(const QString& lab_name,const QString& old_name,const QString& new_name);
+    bool updateCriteriaMaxPoint(const QString& lab_name,const QString& criteria_name,int new_max_point);
 
     bool deleteCriteriasForLab(const QString& lab_name);
     bool deleteLab(const QString& lab_name, const QString& group_name);
+    bool deleteCriteria(const QString& lab_name, const QString& criteria_name);
 
     bool isOpen() const { return db.isOpen(); }
     QString lastError() const { return db.lastError().text(); }
