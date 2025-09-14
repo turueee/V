@@ -8,7 +8,7 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     , database(db)
 {
     ui->setupUi(this);
-    flag = "";
+    dia = new Dialog(this);
     setupMissingTable();
     ui->stackedWidget->setCurrentWidget(ui->StartPage);
     ui->pushButtonBackClicked->setVisible(false);
@@ -24,11 +24,14 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     connect(ui->pushButtonBackClicked,&QPushButton::clicked, this, &MainWindow::onPushButtonBackClicked);
     connect(ui->pushButtonNextClicked,&QPushButton::clicked, this, &MainWindow::onPushButtonNextClicked);
     connect(ui->pushButtonCansel,&QPushButton::clicked, this, &MainWindow::onPushButtonCancelActiveClicked);
+    connect(ui->pushButtonCreateLab, &QPushButton::clicked, this,&MainWindow::onPushButtonCreateLabClicked);
+    connect(ui->pushButtonDeleteLab,&QPushButton::clicked, this, &MainWindow::onPushButtonDeleteLabClicked);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete dia;
 }
 
 void MainWindow::call_students()
@@ -75,16 +78,28 @@ void MainWindow::onPushButtonCallStudentsClicked()
     ui->pushButtonBackClicked->setVisible(true);
 }
 
+// void MainWindow::loadStyleSheet(QApplication& app, const QString& path)
+// {
+//     QFile styleFile(path);
+//     if (styleFile.open(QFile::ReadOnly)) {
+//         QString style = QLatin1String(styleFile.readAll());
+//         app.setStyleSheet(style);
+//         styleFile.close();
+//     }
+// }
+
 void MainWindow::onPushButtonLabClicked()
 {
     ui->lineEditMessage->setText("Enter name");
-    setupChangedPointsTable();
+    qDeleteAll(labButtonGroup.buttons());
     ui->pushButtonBackClicked->setVisible(true);
     setupLabTable();
     setupNamesTable();
-    ui->scrollArea_2->setVisible(false);
+    ui->scrollAreaNames->setVisible(false);
+    ui->scrollAreaLabNames->setVisible(true);
+    ui->pushButtonShowTable->setVisible(false);
+    ui->pushButtonChangedPoints->setVisible(false);
     ui->pushButtonChangedLab->setVisible(false);
-    ui->pushButtonCreateLab->setVisible(false);
     ui->pushButtonDeleteLab->setVisible(false);
     ui->stackedWidget->setCurrentWidget(ui->LabPage);
 }
@@ -95,17 +110,19 @@ void MainWindow::onPushButtonLabNamesClicked()
     {
         button->setEnabled(false);
     }
+    ui->pushButtonShowTable->setVisible(true);
+    ui->pushButtonChangedPoints->setVisible(true);
     ui->pushButtonChangedLab->setVisible(true);
-    ui->pushButtonCreateLab->setVisible(true);
     ui->pushButtonDeleteLab->setVisible(true);
 }
 
 void MainWindow::onPushButtonCancelActiveClicked()
 {
-    ui->scrollArea_2->setVisible(false);
     ui->pushButtonChangedLab->setVisible(false);
-    ui->pushButtonCreateLab->setVisible(false);
+    ui->pushButtonChangedPoints->setVisible(false);
+    ui->pushButtonShowTable->setVisible(false);
     ui->pushButtonDeleteLab->setVisible(false);
+    ui->scrollAreaLabNames->clearFocus();
     for (QAbstractButton* button : studentButtonGroup.buttons())
     {
         button->setEnabled(true);
@@ -152,22 +169,36 @@ void MainWindow::onPushButtonNamesClicked()
     {
         button->setEnabled(false);
     }
-    ui->scrollArea_2->setVisible(true);
 }
 
 void MainWindow::onPushButtonCreateLabClicked()
 {
-
+    if(dia->exec() == QDialog::Accepted)
+    {
+        database.insertLabName(dia->getLabName(), dia->getGroupName());
+        updateLabColumn(dia->getLabName());
+        // нужно переделать чтобы работало через database а не как параметр в функции
+    }
+    else
+        qDebug() << "Eror Dialog Window";
 }
 
 void MainWindow::onPushButtonChangedLabClicked()
 {
-
+    ui->stackedWidget->setCurrentWidget(ui->ChangeLabPage);
 }
 
 void MainWindow::onPushButtonDeleteLabClicked()
 {
+    QString labName = ui->pushButtonDeleteLab->property("удалить").toString();
+    database.deleteLab(labName, "3824Б1ФИ1");
+    qDeleteAll(labButtonGroup.buttons());
+    setupLabTable();
+}
 
+void MainWindow::onScrollButtonClicked(QAbstractButton *button)
+{
+    ui->pushButtonDeleteLab->setProperty("удалить", button->text());
 }
 
 void MainWindow::onPushButtonColorTopic()
@@ -353,6 +384,24 @@ void MainWindow::setupLabTable()
         labButtonGroup.addButton(buttonLab);
         ui->verticalLayoutLabNames->addWidget(buttonLab);
     }
+    connect(&labButtonGroup, QOverload<QAbstractButton*>::of(&QButtonGroup::buttonClicked), this, &MainWindow::onScrollButtonClicked);
+}
+
+void MainWindow::setupChangedLabTable()
+{
+//    ui->tableWidget_2->setColumnWidth(0, 300);
+//    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+//    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
+//    ui->tableWidget_2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+//    QTableWidgetItem *nameItem = new QTableWidgetItem();
+//    ui->tableWidget->setItem(i, 0, nameItem);
+//    QPushButton *buttonMissing = new QPushButton("Отсутствует");
+//    buttonMissing->setProperty("studentName", name);
+//    connect(buttonMissing, &QPushButton::clicked, this, &MainWindow::onPushButtonMissingTableClicked);
+//    ui->tableWidget->setCellWidget(i, 1, buttonMissing);
+//    i++;
+
 }
 
 void MainWindow::updateChangedPointsTable()
@@ -360,12 +409,45 @@ void MainWindow::updateChangedPointsTable()
     QVector<QString> names = calls.getNamesWithoutMissings();
     for (size_t i = 0; i < names.size(); ++i) {
         QTableWidgetItem *callItem = ui->tableWidget_2->item(i, 1);
-        if (callItem) {
+        if (callItem)
+        {
             callItem->setText(QString::number(calls.getPoints(names[i])));
         }
     }
     database.updateNumbersByName(calls.getCalls());
 }
+
+void MainWindow::updateLabColumn(const QString& labName)
+{
+    QPushButton *buttonLab = new QPushButton(labName);
+    connect(buttonLab, &QPushButton::clicked, this, &MainWindow::onPushButtonLabNamesClicked);
+    buttonLab->setCheckable(true);
+    buttonLab->setStyleSheet(
+                "QPushButton {"
+                "   text-align: left;"
+                "   padding: 8px;"
+                "   border: 1px solid #ccc;"
+                "   background: #f0f0f0;"
+                "}"
+                "QPushButton:hover {"
+                "   background: #e0e0e0;"
+                "}"
+                "QPushButton:checked {"
+                "   border: 2px solid #0078d7;"
+                "   background: #d0e8f0;"
+                "   font-weight: bold;"
+                "}"
+                "QPushButton:checked:disabled {"
+                "   border: 2px solid #0078d7;"
+                "   background: #d0e8f0;"
+                "   font-weight: bold;"
+                "   color: #000;"
+                "}"
+            );
+    labButtonGroup.addButton(buttonLab);
+    ui->verticalLayoutLabNames->addWidget(buttonLab);
+}
+
 
 
 

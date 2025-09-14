@@ -8,7 +8,10 @@ RC_ICONS = 5.ico
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+QMAKE_CXXFLAGS += -Wno-deprecated-copy
+
 SOURCES += \
+    dialog.cpp \
     main.cpp \
     tcriteriallimit.cpp \
     mainwindow.cpp \
@@ -16,12 +19,14 @@ SOURCES += \
     tdatabase.cpp
 
 HEADERS += \
+    dialog.h \
     mainwindow.h \
     tcriteriallimit.h \
     tcalls.h \
     tdatabase.h
 
 FORMS += \
+    dialog.ui \
     mainwindow.ui
 
 
@@ -34,3 +39,6 @@ win32 {
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    styles.qrc

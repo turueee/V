@@ -507,8 +507,8 @@ bool TDatabase::updateLabNames (const QVector<QString>& lab_names,const QString&
 {
     QVector<QString> old_names = selectLabsNameForGroup(group_name), new_names(lab_names);
 
-    for (QString old_name: old_names)
-        for (QString new_name:new_names)
+    for (const QString &old_name: old_names)
+        for (const QString &new_name:new_names)
             if (new_name == old_name)
             {
                 old_names.removeAll(new_name);

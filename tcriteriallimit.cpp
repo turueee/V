@@ -6,6 +6,7 @@ TCriteriaLimit::TCriteriaLimit()
     , limit_point()
 {
     // Пустой конструктор
+
 }
 
 TCriteriaLimit::TCriteriaLimit(TDatabase& db, QString lab_name_)

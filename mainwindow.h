@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QFont>
+#include "dialog.h"
 #include "tcalls.h"
 #include "tdatabase.h"
 
@@ -28,16 +29,20 @@ public:
     MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent = nullptr);
     ~MainWindow();
     // void read_from_file(const TCalls &c_calls_, TDatabase database_);
+    void loadStyleSheet(QApplication& app, const QString& path);
     // void save_to_file(const TCalls &c_calls_, TDatabase database_);
     void call_students();
     bool eventFilter(QObject* obj, QEvent* event);
     void setupMissingTable();
     void setupChangedPointsTable();
     void updateChangedPointsTable();
+    void updateLabColumn(const QString& labName);
+    void setupChangedLabTable();
     void setupNamesTable();
     void setupLabTable();
 private slots:
     void onPushButtonColorTopic();
+    void onPushButtonCreateLabClicked();
     void onPushButtonCallStudentsClicked();
     void onPushButtonChangedPointClicked();
     void onPushButtonLabClicked();
@@ -49,14 +54,15 @@ private slots:
     void onPushButtonMissingTableClicked();
     void onPushButtonChangedPointsTableClicked();
     void onPushButtonNamesClicked();
-    void onPushButtonCreateLabClicked();
     void onPushButtonChangedLabClicked();
     void onPushButtonDeleteLabClicked();
+    void onScrollButtonClicked(QAbstractButton *button);
 signals:
     void qonKeyBoardEnterClicked();
 private:
     Ui::MainWindow *ui;
-    QString flag;
+    Dialog *dia;
+    QString tmp;
     QButtonGroup studentButtonGroup;
     QButtonGroup labButtonGroup;
     TCalls calls;
