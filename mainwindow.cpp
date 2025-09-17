@@ -198,9 +198,23 @@ void MainWindow::onCriterialChanged(QTableWidgetItem *item)
     qDebug()<< "2";
     QString labName = ui->pushButtonDeleteLab->property("удалить").toString()
             , criterialName = item->data(Qt::UserRole).toString();
+    // if(!criterialName.isEmpty()
+    //     && criterialName != item->text()
+    //     && isDigitsOnly(item->text()))
+        // database.updateCriteriaMaxPoint(labName, criterialName, item->text());
     if(!criterialName.isEmpty() && criterialName != item->text())
-        database.deleteCriteria(labName, criterialName);
+        database.updateCriteriaName(labName, criterialName, item->text());
 }
+
+// bool MainWindow::isDigitsOnly(const QString& str) {
+//     QRegularExpression regex("^\\d+$");
+//     return regex.match(str).hasMatch();
+// }
+
+// bool MainWindow::isLettersOnly(const QString& str) {
+//     QRegularExpression regex("^\\p{L}+$");
+//     return regex.match(str).hasMatch();
+// }
 
 void MainWindow::onPushButtonChangedLabClicked()
 {

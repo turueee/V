@@ -9,7 +9,6 @@
 #include <QMap>
 #include <QVector>
 #include <QString>
-#include <stdexcept>
 
 class TDatabase
 {
@@ -27,9 +26,7 @@ public:
     bool createPointsTable();
 
     bool insertCallsFromMap(const QMap<QString, size_t>& calls);
-
     bool insertLabName(const QString& name,const QString& group_name);
-
     bool insertCriteriaName(const QString& criteria_name, const QString& lab_name, int max_point);
     bool insertCriteriaNameFromMap(const QMap<QString, int>& criteriaslimits, const QString& lab_name);
     bool insertGroup(const QString& group_name, int group_id);
@@ -42,6 +39,7 @@ public:
     QVector<int> selectNamesIdByGroup(const QString& group_name);
     QVector<QString> selectNamesByGroup(const QString& group_name);
     QVector<QString> selectLabsNameForGroup(const QString& group_name);
+    QMap<QString, int> selectPointsForLab(const QString& group_name, const QString& lab_name);
 
 
     bool updateNumbersByName(const QMap<QString, size_t>& newData);
@@ -51,6 +49,7 @@ public:
     bool updateLabName(const QString& old_name,const QString& new_name);
     bool updateCriteriaName(const QString& lab_name,const QString& old_name,const QString& new_name);
     bool updateCriteriaMaxPoint(const QString& lab_name,const QString& criteria_name,int new_max_point);
+    bool updatePointByCriteriaAndName(const QString& lab_name,const QString& name,const QString& criteria_name,int point);
 
     bool deleteCriteriasForLab(const QString& lab_name);
     bool deleteLab(const QString& lab_name, const QString& group_name);
@@ -64,6 +63,7 @@ private:
     int getLabIdByName(const QString& lab_name);
     int getGroupIdByName(const QString& group_name);
     int getCriteriaIdByName(const QString& criteria_name,const QString& lab_name);
+    int getMaxPointForCriteria(const QString& lab_name,const QString& criteria_name);
 };
 
 #endif // TDATABASE_H

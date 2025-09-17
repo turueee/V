@@ -1,6 +1,3 @@
-#include <iostream>
-#include <string>
-#include <map>
 #include "tdatabase.h"
 
 class TCriteriaLimit

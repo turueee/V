@@ -12,6 +12,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QFont>
+#include <QRegularExpression>
 #include "dialog.h"
 #include "tcalls.h"
 #include "tdatabase.h"
@@ -29,9 +30,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent = nullptr);
     ~MainWindow();
-    // void read_from_file(const TCalls &c_calls_, TDatabase database_);
     void loadStyleSheet(QApplication& app, const QString& path);
-    // void save_to_file(const TCalls &c_calls_, TDatabase database_);
     void call_students();
     bool eventFilter(QObject* obj, QEvent* event);
     void setupMissingTable();
@@ -39,6 +38,8 @@ public:
     void updateChangedPointsTable();
     void updateLabColumn(const QString& labName);
     void setupChangedLabTable();
+    // bool isDigitsOnly(const QString& str);
+    // bool isLettersOnly(const QString& str);
     void setupNamesTable();
     void setupLabTable();
 private slots:
