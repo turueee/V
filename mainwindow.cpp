@@ -26,6 +26,9 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     connect(ui->pushButtonCansel,&QPushButton::clicked, this, &MainWindow::onPushButtonCancelActiveClicked);
     connect(ui->pushButtonCreateLab, &QPushButton::clicked, this,&MainWindow::onPushButtonCreateLabClicked);
     connect(ui->pushButtonDeleteLab,&QPushButton::clicked, this, &MainWindow::onPushButtonDeleteLabClicked);
+    connect(ui->pushButtonChangedLab, &QPushButton::clicked, this, &MainWindow::onPushButtonChangedLabClicked);
+    connect(ui->pushButtonAddCriterial, &QPushButton::clicked, this, &MainWindow::onPushButtonAddCriterialClicked);
+    connect(ui->tableWidgetChangedLab, &QTableWidget::itemChanged, this, &MainWindow::onCriterialChanged);
 }
 
 MainWindow::~MainWindow()
@@ -90,7 +93,7 @@ void MainWindow::onPushButtonCallStudentsClicked()
 
 void MainWindow::onPushButtonLabClicked()
 {
-    ui->lineEditMessage->setText("Enter name");
+    ui->lineEditMessage->setText("");
     qDeleteAll(labButtonGroup.buttons());
     ui->pushButtonBackClicked->setVisible(true);
     setupLabTable();
@@ -103,6 +106,7 @@ void MainWindow::onPushButtonLabClicked()
     ui->pushButtonDeleteLab->setVisible(false);
     ui->stackedWidget->setCurrentWidget(ui->LabPage);
 }
+
 
 void MainWindow::onPushButtonLabNamesClicked()
 {
@@ -135,7 +139,7 @@ void MainWindow::onPushButtonCancelActiveClicked()
 
 void MainWindow::onPushButtonChangedPointClicked()
 {
-    ui->lineEditMessage->setText("Enter name");
+    ui->lineEditMessage->setText("Введите имя");
     setupChangedPointsTable();
     ui->pushButtonBackClicked->setVisible(true);
     ui->stackedWidget->setCurrentWidget(ui->ChangedPointPage);
@@ -150,8 +154,14 @@ void MainWindow::onPushButtonSaveDataClicked()
 void MainWindow::onPushButtonBackClicked()
 {
     ui->lineEditMessage->setText("Выберете действие");
-    ui->stackedWidget->setCurrentWidget(ui->ChoicePage);
-    ui->pushButtonBackClicked->setVisible(false);
+    if(ui->stackedWidget->currentWidget() == ui->ChangeLabPage)
+        ui->stackedWidget->setCurrentWidget(ui->LabPage);
+    else
+    {
+        ui->stackedWidget->setCurrentWidget(ui->ChoicePage);
+        ui->pushButtonBackClicked->setVisible(false);
+        ui->lineEditMessage->setText("Выберете действие");
+    }
     ui->statusbar->clearMessage();
 }
 
@@ -183,9 +193,34 @@ void MainWindow::onPushButtonCreateLabClicked()
         qDebug() << "Eror Dialog Window";
 }
 
+void MainWindow::onCriterialChanged(QTableWidgetItem *item)
+{
+    qDebug()<< "2";
+    QString labName = ui->pushButtonDeleteLab->property("удалить").toString()
+            , criterialName = item->data(Qt::UserRole).toString();
+    if(!criterialName.isEmpty() && criterialName != item->text())
+        database.deleteCriteria(labName, criterialName);
+}
+
 void MainWindow::onPushButtonChangedLabClicked()
 {
+    setupChangedLabTable();
     ui->stackedWidget->setCurrentWidget(ui->ChangeLabPage);
+}
+void MainWindow::onPushButtonAddCriterialClicked()
+{
+    ui->tableWidgetChangedLab->blockSignals(true);
+    int rowCount = ui->tableWidgetChangedLab->rowCount();
+    ui->tableWidgetChangedLab->insertRow(rowCount);
+    QTableWidgetItem* nameLabItem = new QTableWidgetItem("");
+    ui->tableWidgetChangedLab->setItem(rowCount, 0, nameLabItem);
+    QTableWidgetItem* maxpointItem = new QTableWidgetItem("");
+    ui->tableWidgetChangedLab->setItem(rowCount, 1, maxpointItem);
+    QPushButton * buttonDelete = new QPushButton("удалить");
+    buttonDelete->setProperty("rowIndex", QVariantList{nameLabItem->text(), maxpointItem->text(), rowCount});
+    connect(buttonDelete, &QPushButton::clicked, this, &MainWindow::onPushButtonDeleteCriterialClicked);
+    ui->tableWidgetChangedLab->setCellWidget(rowCount, 2, buttonDelete);
+    ui->tableWidgetChangedLab->blockSignals(false);
 }
 
 void MainWindow::onPushButtonDeleteLabClicked()
@@ -196,6 +231,31 @@ void MainWindow::onPushButtonDeleteLabClicked()
     setupLabTable();
 }
 
+void MainWindow::onPushButtonDeleteCriterialClicked()
+{
+    QPushButton* button = qobject_cast<QPushButton*>(sender());
+    QString labName = ui->pushButtonDeleteLab->property("удалить").toString();
+    QVariantList tmp = button->property("rowIndex").toList();
+    if((tmp[0] != "") && (tmp[1] != ""))
+        database.deleteCriteria(labName,tmp[0].toString());
+    if (button)
+    {
+        int rowToDelete = tmp[2].toInt();
+        if (rowToDelete >= 0 && rowToDelete < ui->tableWidgetChangedLab->rowCount())
+        {
+            ui->tableWidgetChangedLab->removeRow(rowToDelete);
+
+            for (int row = rowToDelete; row < ui->tableWidgetChangedLab->rowCount(); ++row)
+            {
+                QPushButton* btn = qobject_cast<QPushButton*>(
+                    ui->tableWidgetChangedLab->cellWidget(row, 2));
+                if (btn)
+                    btn->setProperty("rowIndex", row);
+            }
+        }
+    }
+}
+
 void MainWindow::onScrollButtonClicked(QAbstractButton *button)
 {
     ui->pushButtonDeleteLab->setProperty("удалить", button->text());
@@ -204,24 +264,24 @@ void MainWindow::onScrollButtonClicked(QAbstractButton *button)
 void MainWindow::onPushButtonColorTopic()
 {
     // переписать нормально
-    ui->pushButtonBackClicked->setStyleSheet("background-color: #323232;");
-    ui->pushButtonCallStudents->setStyleSheet("background-color: #323232;");
-    ui->pushButtonChangedPoint->setStyleSheet("background-color: #323232;");
-    ui->pushButtonLab->setStyleSheet("background-color: #323232;");
-    ui->pushButtonNextClicked->setStyleSheet("background-color: #323232;");
-    ui->pushButtonSaveData->setStyleSheet("background-color: #323232;");
-    ui->CallPage->setStyleSheet("background-color: #323232;");
-    ui->ChangedPointPage->setStyleSheet("background-color: #323232;");
-    ui->ChoicePage->setStyleSheet("background-color: #323232;");
-    ui->StartPage->setStyleSheet("background-color: #323232;");
-    ui->centralwidget->setStyleSheet("background-color: #323232;");
-    ui->lineEditMessage->setStyleSheet("background-color: #323232;");
-    ui->textEditInput->setStyleSheet("background-color: #323232;");
-    ui->textEditOutput->setStyleSheet("background-color: #323232;");
-    ui->menubar->setStyleSheet("background-color: #323232;");
-    ui->tableWidget->setStyleSheet("background-color: #323232;");
-    ui->tableWidget_2->setStyleSheet("background-color: #323232;");
-    ui->stackedWidget->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonBackClicked->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonCallStudents->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonChangedPoint->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonLab->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonNextClicked->setStyleSheet("background-color: #323232;");
+//    ui->pushButtonSaveData->setStyleSheet("background-color: #323232;");
+//    ui->CallPage->setStyleSheet("background-color: #323232;");
+//    ui->ChangedPointPage->setStyleSheet("background-color: #323232;");
+//    ui->ChoicePage->setStyleSheet("background-color: #323232;");
+//    ui->StartPage->setStyleSheet("background-color: #323232;");
+//    ui->centralwidget->setStyleSheet("background-color: #323232;");
+//    ui->lineEditMessage->setStyleSheet("background-color: #323232;");
+//    ui->textEditInput->setStyleSheet("background-color: #323232;");
+//    ui->textEditOutput->setStyleSheet("background-color: #323232;");
+//    ui->menubar->setStyleSheet("background-color: #323232;");
+//    ui->tableWidgetMissing->setStyleSheet("background-color: #323232;");
+//    ui->tableWidgetChangedPoint->setStyleSheet("background-color: #323232;");
+//    ui->stackedWidget->setStyleSheet("background-color: #323232;");
 }
 
 void MainWindow::onPushButtonMissingTableClicked()
@@ -230,9 +290,9 @@ void MainWindow::onPushButtonMissingTableClicked()
     if (!button) return;
     QString studentName = button->property("studentName").toString();
     calls.setMissings(studentName);
-    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
-        if (ui->tableWidget->cellWidget(row, 1) == button) {
-            QTableWidgetItem* nameItem = ui->tableWidget->item(row, 0);
+    for (int row = 0; row < ui->tableWidgetMissing->rowCount(); ++row) {
+        if (ui->tableWidgetMissing->cellWidget(row, 1) == button) {
+            QTableWidgetItem* nameItem = ui->tableWidgetMissing->item(row, 0);
             if (nameItem) {
                 QFont font = nameItem->font();
                 font.setStrikeOut(true);
@@ -262,10 +322,10 @@ void MainWindow::onPushButtonChangedPointsTableClicked()
 void MainWindow::setupMissingTable()
 {
     size_t i = 0;
-    ui->tableWidget->setRowCount(calls.getCallsSize());
-    ui->tableWidget->setColumnWidth(0, 300);
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidgetMissing->setRowCount(calls.getCallsSize());
+    ui->tableWidgetMissing->setColumnWidth(0, 300);
+    ui->tableWidgetMissing->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->tableWidgetMissing->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     QVector<QString> names = calls.getNames();
     for (const auto& name : names)
     {
@@ -274,11 +334,11 @@ void MainWindow::setupMissingTable()
         font.setPointSize(12);
         nameItem->setFont(font);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
-        ui->tableWidget->setItem(i, 0, nameItem);
+        ui->tableWidgetMissing->setItem(i, 0, nameItem);
         QPushButton *buttonMissing = new QPushButton("Отсутствует");
         buttonMissing->setProperty("studentName", name);
         connect(buttonMissing, &QPushButton::clicked, this, &MainWindow::onPushButtonMissingTableClicked);
-        ui->tableWidget->setCellWidget(i, 1, buttonMissing);
+        ui->tableWidgetMissing->setCellWidget(i, 1, buttonMissing);
         i++;
     }
 }
@@ -286,11 +346,11 @@ void MainWindow::setupMissingTable()
 void MainWindow::setupChangedPointsTable()
 {
     QVector<QString> names = calls.getNamesWithoutMissings();
-    ui->tableWidget_2->setRowCount(names.size());
-    ui->tableWidget_2->setColumnWidth(0, 300);
-    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
-    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
-    ui->tableWidget_2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidgetChangedPoint->setRowCount(names.size());
+    ui->tableWidgetChangedPoint->setColumnWidth(0, 300);
+    ui->tableWidgetChangedPoint->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->tableWidgetChangedPoint->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
+    ui->tableWidgetChangedPoint->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     for (size_t i = 0; i < names.size(); ++i)
     {
         QTableWidgetItem *nameItem = new QTableWidgetItem(names[i]);
@@ -298,19 +358,19 @@ void MainWindow::setupChangedPointsTable()
         QFont font = nameItem->font();
         font.setPointSize(12);
         nameItem->setFont(font);
-        ui->tableWidget_2->setItem(i, 0, nameItem);
+        ui->tableWidgetChangedPoint->setItem(i, 0, nameItem);
         QTableWidgetItem *callItem = new QTableWidgetItem(QString::number(calls.getPoints(names[i])));
         callItem->setFont(font);
         callItem->setFlags(callItem->flags() & ~Qt::ItemIsEditable);
-        ui->tableWidget_2->setItem(i, 1, callItem);
+        ui->tableWidgetChangedPoint->setItem(i, 1, callItem);
         QPushButton *buttonPlus = new QPushButton("+");
         buttonPlus->setProperty("studentName", names[i]);
         connect(buttonPlus, &QPushButton::clicked, this,&MainWindow::onPushButtonChangedPointsTableClicked);
-        ui->tableWidget_2->setCellWidget(i, 2, buttonPlus);
+        ui->tableWidgetChangedPoint->setCellWidget(i, 2, buttonPlus);
         QPushButton *buttonMinus = new QPushButton("-");
         buttonMinus->setProperty("studentName", names[i]);
         connect(buttonMinus, &QPushButton::clicked, this,&MainWindow::onPushButtonChangedPointsTableClicked);
-        ui->tableWidget_2->setCellWidget(i, 3, buttonMinus);
+        ui->tableWidgetChangedPoint->setCellWidget(i, 3, buttonMinus);
     }
 }
 
@@ -389,26 +449,40 @@ void MainWindow::setupLabTable()
 
 void MainWindow::setupChangedLabTable()
 {
-//    ui->tableWidget_2->setColumnWidth(0, 300);
-//    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
-//    ui->tableWidget_2->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
-//    ui->tableWidget_2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-//    QTableWidgetItem *nameItem = new QTableWidgetItem();
-//    ui->tableWidget->setItem(i, 0, nameItem);
-//    QPushButton *buttonMissing = new QPushButton("Отсутствует");
-//    buttonMissing->setProperty("studentName", name);
-//    connect(buttonMissing, &QPushButton::clicked, this, &MainWindow::onPushButtonMissingTableClicked);
-//    ui->tableWidget->setCellWidget(i, 1, buttonMissing);
-//    i++;
-
+    ui->tableWidgetChangedLab->blockSignals(true);
+    ui->tableWidgetChangedLab->setRowCount(0);
+    QString labName = ui->pushButtonDeleteLab->property("удалить").toString();
+    ui->tableWidgetChangedLab->verticalHeader()->setDefaultSectionSize(40);
+    ui->tableWidgetChangedLab->setColumnCount(3);
+    ui->tableWidgetChangedLab->setHorizontalHeaderLabels({"название критерия", "макисмальный балл", "удалить"});
+    ui->tableWidgetChangedLab->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->tableWidgetChangedLab->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
+    ui->tableWidgetChangedLab->setColumnWidth(0, 300);
+    ui->tableWidgetChangedLab->horizontalHeader()->setStretchLastSection(false);
+    QMap<QString, int> limits = database.selectLabCriteriaLimits(labName);
+    int i = 0;
+    for(auto it = limits.begin(); it != limits.end(); ++it)
+    {
+        ui->tableWidgetChangedLab->insertRow(i);
+        ui->tableWidgetChangedLab->setRowHeight(i, 50);
+        QTableWidgetItem* nameLabItem = new QTableWidgetItem(it.key());
+        ui->tableWidgetChangedLab->setItem(i, 0, nameLabItem);
+        QTableWidgetItem* maxpointItem = new QTableWidgetItem(QString::number(it.value()));
+        ui->tableWidgetChangedLab->setItem(i, 1, maxpointItem);
+        QPushButton * buttonDelete = new QPushButton("удалить");
+        buttonDelete->setProperty("rowIndex",QVariantList{nameLabItem->text(), maxpointItem->text(), i});
+        connect(buttonDelete, &QPushButton::clicked, this, &MainWindow::onPushButtonDeleteCriterialClicked);
+        ui->tableWidgetChangedLab->setCellWidget(i, 2, buttonDelete);
+        i++;
+    }
+    ui->tableWidgetChangedLab->blockSignals(false);
 }
 
 void MainWindow::updateChangedPointsTable()
 {
     QVector<QString> names = calls.getNamesWithoutMissings();
     for (size_t i = 0; i < names.size(); ++i) {
-        QTableWidgetItem *callItem = ui->tableWidget_2->item(i, 1);
+        QTableWidgetItem *callItem = ui->tableWidgetChangedPoint->item(i, 1);
         if (callItem)
         {
             callItem->setText(QString::number(calls.getPoints(names[i])));
@@ -447,11 +521,4 @@ void MainWindow::updateLabColumn(const QString& labName)
     labButtonGroup.addButton(buttonLab);
     ui->verticalLayoutLabNames->addWidget(buttonLab);
 }
-
-
-
-
-
-
-
 

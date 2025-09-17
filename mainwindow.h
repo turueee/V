@@ -10,6 +10,7 @@
 #include <QRandomGenerator>
 #include <QDebug>
 #include <QTableWidget>
+#include <QTableWidgetItem>
 #include <QFont>
 #include "dialog.h"
 #include "tcalls.h"
@@ -46,6 +47,7 @@ private slots:
     void onPushButtonCallStudentsClicked();
     void onPushButtonChangedPointClicked();
     void onPushButtonLabClicked();
+    void onCriterialChanged(QTableWidgetItem *item);
     void onPushButtonLabNamesClicked();
     void onPushButtonCancelActiveClicked();
     void onPushButtonSaveDataClicked();
@@ -56,7 +58,10 @@ private slots:
     void onPushButtonNamesClicked();
     void onPushButtonChangedLabClicked();
     void onPushButtonDeleteLabClicked();
+    void onPushButtonDeleteCriterialClicked();
     void onScrollButtonClicked(QAbstractButton *button);
+    void onPushButtonAddCriterialClicked();
+
 signals:
     void qonKeyBoardEnterClicked();
 private:
