@@ -195,26 +195,37 @@ void MainWindow::onPushButtonCreateLabClicked()
 
 void MainWindow::onCriterialChanged(QTableWidgetItem *item)
 {
-    qDebug()<< "2";
-    QString labName = ui->pushButtonDeleteLab->property("удалить").toString()
-            , criterialName = item->data(Qt::UserRole).toString();
-    // if(!criterialName.isEmpty()
-    //     && criterialName != item->text()
-    //     && isDigitsOnly(item->text()))
-        // database.updateCriteriaMaxPoint(labName, criterialName, item->text());
-    if(!criterialName.isEmpty() && criterialName != item->text())
-        database.updateCriteriaName(labName, criterialName, item->text());
+    if(!item)
+        return;
+    int row = item->row(),
+           column = ui->tableWidgetChangedLab->columnCount();
+    QString oldText = item->data(Qt::UserRole).toString();
+    QStringList criteriaData;
+    QString labName = ui->pushButtonDeleteLab->property("удалить").toString();
+    for (int i = 0; i < column - 1 ; ++i)
+    {
+        QTableWidgetItem *tableItem = ui->tableWidgetChangedLab->item(row,i);
+        if(tableItem)
+            criteriaData << tableItem->text();
+    }
+    if(criteriaData.size() >= 2 && !criteriaData[0].isEmpty() && !criteriaData[1].isEmpty())
+    {
+        database.updateCriteriaName(labName, oldText, criteriaData[0]);
+        database.updateCriteriaMaxPoint(labName, criteriaData[0], criteriaData[1].toInt());
+    }
+    else
+        qDebug() << "Error update criteria";
 }
 
-// bool MainWindow::isDigitsOnly(const QString& str) {
-//     QRegularExpression regex("^\\d+$");
-//     return regex.match(str).hasMatch();
-// }
+ bool MainWindow::isDigitsOnly(const QString& str) {
+     QRegularExpression regex("^\\d+$");
+     return regex.match(str).hasMatch();
+ }
 
-// bool MainWindow::isLettersOnly(const QString& str) {
-//     QRegularExpression regex("^\\p{L}+$");
-//     return regex.match(str).hasMatch();
-// }
+ bool MainWindow::isLettersOnly(const QString& str) {
+     QRegularExpression regex("^\\p{L}+$");
+     return regex.match(str).hasMatch();
+ }
 
 void MainWindow::onPushButtonChangedLabClicked()
 {
@@ -365,7 +376,7 @@ void MainWindow::setupChangedPointsTable()
     ui->tableWidgetChangedPoint->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
     ui->tableWidgetChangedPoint->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
     ui->tableWidgetChangedPoint->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    for (size_t i = 0; i < names.size(); ++i)
+    for (int i = 0; i < names.size(); ++i)
     {
         QTableWidgetItem *nameItem = new QTableWidgetItem(names[i]);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);

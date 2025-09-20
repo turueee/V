@@ -38,8 +38,8 @@ public:
     void updateChangedPointsTable();
     void updateLabColumn(const QString& labName);
     void setupChangedLabTable();
-    // bool isDigitsOnly(const QString& str);
-    // bool isLettersOnly(const QString& str);
+     bool isDigitsOnly(const QString& str);
+     bool isLettersOnly(const QString& str);
     void setupNamesTable();
     void setupLabTable();
 private slots:
