@@ -42,8 +42,8 @@ public:
      bool isLettersOnly(const QString& str);
     void setupNamesTable();
     void setupLabTable();
+    void setupShowLabTable();
 private slots:
-    void onPushButtonColorTopic();
     void onPushButtonCreateLabClicked();
     void onPushButtonCallStudentsClicked();
     void onPushButtonChangedPointClicked();
@@ -62,6 +62,10 @@ private slots:
     void onPushButtonDeleteCriterialClicked();
     void onScrollButtonClicked(QAbstractButton *button);
     void onPushButtonAddCriterialClicked();
+    void onPushButtonShowTableClicked();
+    void adjustTableColumns();
+    void onMarkChanged(QTableWidgetItem *item);
+    void onCheckBoxEditTableToggled(bool checked);
 
 signals:
     void qonKeyBoardEnterClicked();

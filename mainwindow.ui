@@ -102,12 +102,18 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="StartPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item alignment="Qt::AlignHCenter">
+        <item>
          <widget class="QTableWidget" name="tableWidgetMissing">
           <property name="minimumSize">
            <size>
@@ -117,8 +123,8 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>500</width>
-            <height>470</height>
+            <width>100000</width>
+            <height>100000</height>
            </size>
           </property>
           <column>
@@ -147,8 +153,8 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>500</width>
-            <height>470</height>
+            <width>1000000</width>
+            <height>100000</height>
            </size>
           </property>
           <column>
@@ -283,7 +289,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>700</width>
+            <width>10000</width>
             <height>400</height>
            </size>
           </property>
@@ -302,7 +308,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>700</width>
+            <width>100000</width>
             <height>50</height>
            </size>
           </property>
@@ -330,6 +336,9 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_6">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
@@ -445,6 +454,12 @@
                  <width>198</width>
                  <height>498</height>
                 </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <item>
@@ -653,6 +668,9 @@
                   <height>30</height>
                  </size>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -671,16 +689,31 @@
        </layout>
       </widget>
       <widget class="QWidget" name="ShowLabPage">
-       <widget class="QTableWidget" name="tableWidgetShowLab">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>100</y>
-          <width>521</width>
-          <height>341</height>
-         </rect>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QCheckBox" name="checkBox">
+          <property name="text">
+           <string>Включить изменение</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidgetShowLab">
+          <property name="minimumSize">
+           <size>
+            <width>500</width>
+            <height>400</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
