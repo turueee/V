@@ -237,13 +237,16 @@ bool TDatabase::insertCriteriaName(const QString& criteria_name, const QString& 
     query.addBindValue(criteria_name);
     query.addBindValue(max_point);
     query.addBindValue(lab_id);
-    query.exec();
+    if (!query.exec()) {
+            qDebug() << "Ошибка вставки критерия:" << query.lastError().text();
+            return false;
+        }
 
     QVector<QString> names = selectNamesByGroup("3824Б1ФИ1");
     for (QString name:names)
         insertCriteriaPoint(criteria_name,name,lab_name);
 
-    return query.exec() && query.numRowsAffected() > 0;
+    return query.numRowsAffected() > 0;
 }
 
 bool TDatabase::insertCriteriaNameFromMap(const QMap<QString, int>& criteriaslimits, const QString& lab_name)

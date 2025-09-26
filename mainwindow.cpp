@@ -18,6 +18,7 @@ MainWindow::MainWindow(TCalls &c_calls, TDatabase &db,QWidget *parent)
     ui->lineEditMessage->setReadOnly(true);
     ui->textEditOutput->setReadOnly(true);
     ui->tableWidgetShowLab->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidgetShowLab->blockSignals(true);
 //    onPushButtonColorTopic();
     connect(ui->pushButtonCallStudents, &QPushButton::clicked, this, &MainWindow::onPushButtonCallStudentsClicked);
     connect(ui->pushButtonLab, &QPushButton::clicked, this, &MainWindow::onPushButtonLabClicked);
@@ -44,12 +45,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::onCheckBoxEditTableToggled(bool checked)
 {
-    if (checked) {
+    if (checked)
+    {
         ui->tableWidgetShowLab->setEditTriggers(QAbstractItemView::DoubleClicked |
                                         QAbstractItemView::EditKeyPressed |
                                         QAbstractItemView::AnyKeyPressed);
-    } else {
+        ui->tableWidgetShowLab->blockSignals(false);
+    }
+    else
+    {
         ui->tableWidgetShowLab->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        ui->tableWidgetShowLab->blockSignals(true);
     }
 }
 bool MainWindow::isDigitsOnly(const QString& str) {
@@ -547,7 +553,7 @@ void MainWindow::setupShowLabTable()
         QMap<QString, int> markData = database.selectPointsForLab("3824Б1ФИ1", labName);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         ui->tableWidgetShowLab->setItem(row, 0, nameItem);
-        for (int j = 1; j < limitSize ; ++j)
+        for (int j = 1; j <= limitSize ; ++j)
         {
             int tt = markData[names[row]];
             QTableWidgetItem *markItem = new QTableWidgetItem(QString::number(tt));
