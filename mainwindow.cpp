@@ -529,12 +529,15 @@ void MainWindow::setupLabTable()
 
 void MainWindow::setupShowLabTable()
 {
+    ui->tableWidgetShowLab->blockSignals(true);
+    ui->tableWidgetShowLab->setRowCount(0);
     QString labName = ui->pushButtonDeleteLab->property("удалить").toString();
     QMap<QString, int> limits = database.selectLabCriteriaLimits(labName);
     QVector<QString> names = database.selectNamesByGroup("3824Б1ФИ1");
     int limitSize = limits.size(),
         namesSize = names.size();
     QList<QString> criteriaNames = limits.keys();
+    QMap<QString, int> markData;
     ui->tableWidgetShowLab->setColumnCount(limitSize + 1);
     ui->tableWidgetShowLab->setRowCount(namesSize);
     ui->tableWidgetChangedPoint->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -547,20 +550,23 @@ void MainWindow::setupShowLabTable()
     ui->tableWidgetShowLab->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->tableWidgetShowLab->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     ui->tableWidgetShowLab->setColumnWidth(0, 200);
-    for (int row = 0; row < namesSize; ++row)
+    for (int row = 0; row < namesSize ; ++row)
     {
         QTableWidgetItem *nameItem = new QTableWidgetItem(names[row]);
-        QMap<QString, int> markData = database.selectPointsForLab("3824Б1ФИ1", labName);
         nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
         ui->tableWidgetShowLab->setItem(row, 0, nameItem);
-        for (int j = 1; j <= limitSize ; ++j)
+    }
+    for (int column = 1; column <= limitSize; ++column)
+    {
+        markData = database.selectPointForCriteriaAndLabAndGroup("3824Б1ФИ1", labName, criteriaNames[column - 1]);
+        for (int row = 0; row < namesSize ; ++row)
         {
-            int tt = markData[names[row]];
-            QTableWidgetItem *markItem = new QTableWidgetItem(QString::number(tt));
+            QTableWidgetItem *markItem = new QTableWidgetItem(QString::number(markData[names[row]]));
             markItem->setTextAlignment(Qt::AlignCenter);
-            ui->tableWidgetShowLab->setItem(row, j , markItem);
+            ui->tableWidgetShowLab->setItem(row, column , markItem);
         }
     }
+
 
 }
 

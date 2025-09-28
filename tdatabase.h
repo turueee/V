@@ -34,6 +34,7 @@ public:
 
 
     QMap<QString, size_t> readTableToCallsMap();
+    QMap<QString,int> selectPointForCriteriaAndLabAndGroup(const QString& group_name, const QString& lab_name,const QString& criteria_name);
     QMap<QString, int> selectLabCriteriaLimits(const QString& lab_name);
     QMap<QString, int> selectNamePointsLab(const QString& lab_name, const QString& name);
     QVector<int> selectNamesIdByGroup(const QString& group_name);

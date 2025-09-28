@@ -384,6 +384,23 @@ QMap<QString, int> TDatabase::selectPointsForLab(const QString& group_name, cons
     return points;
 }
 
+QMap<QString,int> TDatabase::selectPointForCriteriaAndLabAndGroup(const QString& group_name, const QString& lab_name,const QString& criteria_name)
+{
+    QVector<QString> names = selectNamesByGroup(group_name);
+    QMap<QString, int> points;
+    QSqlQuery query(db);
+
+    for (const QString& name : names)
+    {
+        query.prepare("SELECT point FROM points WHERE criteria_id = ? AND id = ?");
+        query.addBindValue(getCriteriaIdByName(criteria_name,lab_name));
+        query.addBindValue(getIdByName(name));
+        query.exec();
+        query.next();
+        points[name] = query.value(0).toInt();
+    }
+    return points;
+}
 QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const QString& name)
 {
     QMap<QString, int> resultMap;
