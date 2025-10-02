@@ -370,7 +370,6 @@ QMap<QString, int> TDatabase::selectPointsForLab(const QString& group_name, cons
 {
     QVector<QString> names = selectNamesByGroup(group_name);
     QMap<QString, int> points;
-    QSqlQuery query(db);
 
     for (const QString& name : names)
     {
@@ -389,10 +388,9 @@ QMap<QString,int> TDatabase::selectPointForCriteriaAndLabAndGroup(const QString&
     QVector<QString> names = selectNamesByGroup(group_name);
     QMap<QString, int> points;
     QSqlQuery query(db);
-
     for (const QString& name : names)
     {
-        query.prepare("SELECT point FROM points WHERE criteria_id = ? AND id = ?");
+        query.prepare("SELECT point_krit FROM points WHERE criteria_id = ? AND id = ?");
         query.addBindValue(getCriteriaIdByName(criteria_name,lab_name));
         query.addBindValue(getIdByName(name));
         query.exec();
@@ -429,7 +427,7 @@ QMap<QString, int> TDatabase::selectNamePointsLab(const QString& lab_name, const
     int user_id = userQuery.value(0).toInt();
 
     QSqlQuery pointsQuery(db);
-    pointsQuery.prepare("SELECT point FROM points WHERE id = ? AND criteria_id = ?");
+    pointsQuery.prepare("SELECT point_krit FROM points WHERE id = ? AND criteria_id = ?");
 
     while (criteriaQuery.next()) {
         int criteria_id = criteriaQuery.value(0).toInt();

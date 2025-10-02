@@ -538,7 +538,7 @@ void MainWindow::setupShowLabTable()
         namesSize = names.size();
     QList<QString> criteriaNames = limits.keys();
     QMap<QString, int> markData;
-    ui->tableWidgetShowLab->setColumnCount(limitSize + 1);
+    ui->tableWidgetShowLab->setColumnCount(limitSize + 2);
     ui->tableWidgetShowLab->setRowCount(namesSize);
     ui->tableWidgetChangedPoint->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableWidgetChangedPoint->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
@@ -547,6 +547,7 @@ void MainWindow::setupShowLabTable()
     {
         ui->tableWidgetShowLab->setHorizontalHeaderItem(i + 1, new QTableWidgetItem(criteriaNames[i]));
     }
+    ui->tableWidgetShowLab->setHorizontalHeaderItem(limitSize + 1, new QTableWidgetItem("Сумма"));
     ui->tableWidgetShowLab->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->tableWidgetShowLab->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     ui->tableWidgetShowLab->setColumnWidth(0, 200);
@@ -566,8 +567,13 @@ void MainWindow::setupShowLabTable()
             ui->tableWidgetShowLab->setItem(row, column , markItem);
         }
     }
-
-
+    markData = database.selectPointsForLab("3824Б1ФИ1", labName);
+    for (int row = 0; row < namesSize ; ++row)
+    {
+        QTableWidgetItem *sumItem = new QTableWidgetItem(QString::number(markData[names[row]]));
+        sumItem->setFlags(sumItem->flags() & ~Qt::ItemIsEditable);
+        ui->tableWidgetShowLab->setItem(row, limitSize + 1, sumItem);
+    }
 }
 
 void MainWindow::setupChangedLabTable()
