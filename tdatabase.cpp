@@ -366,21 +366,50 @@ QVector<QString> TDatabase::selectLabsNameForGroup(const QString& group_name)
     return labs;
 }
 
+
 QMap<QString, int> TDatabase::selectPointsForLab(const QString& group_name, const QString& lab_name)
 {
+    QMap<QString, int> resultMap;
     QVector<QString> names = selectNamesByGroup(group_name);
-    QMap<QString, int> points;
 
-    for (const QString& name : names)
-    {
-        QMap<QString, int> point_for_name = selectNamePointsLab(lab_name, name);
-        int sum_point = 0;
-        for (auto it = point_for_name.begin(); it != point_for_name.end(); ++it)
-            sum_point+=it.value();
-        points[name] = sum_point;
+    for (const QString& name : names) {
+        int totalPoints = 0;
+        int lab_id = getLabIdByName(lab_name);
+
+        QSqlQuery criteriaQuery(db);
+        criteriaQuery.prepare("SELECT criteria_id FROM criterias WHERE lab_id = ?");
+        criteriaQuery.addBindValue(lab_id);
+        criteriaQuery.exec();
+
+        QVector<int> criteriaIds;
+        while (criteriaQuery.next()) {
+            criteriaIds.append(criteriaQuery.value(0).toInt());
+        }
+
+        QSqlQuery userQuery(db);
+        userQuery.prepare("SELECT id FROM users WHERE name = ?");
+        userQuery.addBindValue(name);
+        userQuery.exec();
+
+        if (userQuery.next()) {
+            int user_id = userQuery.value(0).toInt();
+
+            QSqlQuery pointsQuery(db);
+            for (int criteria_id : criteriaIds) {
+                pointsQuery.prepare("SELECT point_krit FROM points WHERE id = ? AND criteria_id = ?");
+                pointsQuery.addBindValue(user_id);
+                pointsQuery.addBindValue(criteria_id);
+                if (pointsQuery.exec() && pointsQuery.next()) {
+                    totalPoints += pointsQuery.value(0).toInt();
+                }
+            }
+        }
+
+        resultMap[name] = totalPoints;
+        qDebug() << name << ":" << totalPoints;
     }
 
-    return points;
+    return resultMap;
 }
 
 QMap<QString,int> TDatabase::selectPointForCriteriaAndLabAndGroup(const QString& group_name, const QString& lab_name,const QString& criteria_name)
