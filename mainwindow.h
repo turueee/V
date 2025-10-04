@@ -13,6 +13,7 @@
 #include <QTableWidgetItem>
 #include <QFont>
 #include <QRegularExpression>
+#include <QTimer>
 #include "dialog.h"
 #include "tcalls.h"
 #include "tdatabase.h"
@@ -38,11 +39,13 @@ public:
     void updateChangedPointsTable();
     void updateLabColumn(const QString& labName);
     void setupChangedLabTable();
-     bool isDigitsOnly(const QString& str);
-     bool isLettersOnly(const QString& str);
-    void setupNamesTable();
+    bool isDigitsOnly(const QString& str);
+    bool isLettersOnly(const QString& str);
     void setupLabTable();
     void setupShowLabTable();
+    void scaleFonts (QTableWidget* tableWidget ,int fontSize);
+    void setupTableScaling(QTableWidget* table, const QVector<int>& columnPercentages);
+    int calculateScaledFontSize(int tableWidth);
 private slots:
     void onPushButtonCreateLabClicked();
     void onPushButtonCallStudentsClicked();
@@ -63,7 +66,6 @@ private slots:
     void onScrollButtonClicked(QAbstractButton *button);
     void onPushButtonAddCriterialClicked();
     void onPushButtonShowTableClicked();
-    void adjustTableColumns();
     void onMarkChanged(QTableWidgetItem *item);
     void onCheckBoxEditTableToggled(bool checked);
 

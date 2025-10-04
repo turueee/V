@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>768</width>
-    <height>697</height>
+    <width>923</width>
+    <height>863</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,39 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <spacer name="verticalSpacer_6">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_11">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="pushButtonBackClicked">
         <property name="sizePolicy">
@@ -67,38 +99,39 @@
         </property>
        </widget>
       </item>
+      <item>
+       <spacer name="horizontalSpacer_10">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </item>
-    <item alignment="Qt::AlignHCenter">
-     <widget class="QLineEdit" name="lineEditMessage">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item>
+     <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <property name="minimumSize">
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
        <size>
-        <width>300</width>
-        <height>30</height>
+        <width>20</width>
+        <height>20</height>
        </size>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-      </property>
-      <property name="text">
-       <string>выберете лабораторную</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
+     </spacer>
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
@@ -109,10 +142,26 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="StartPage">
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <item>
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QTableWidget" name="tableWidgetMissing">
           <property name="minimumSize">
@@ -139,10 +188,42 @@
           </column>
          </widget>
         </item>
+        <item>
+         <spacer name="horizontalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="ChangedPointPage">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QTableWidget" name="tableWidgetChangedPoint">
           <property name="minimumSize">
@@ -179,152 +260,33 @@
           </column>
          </widget>
         </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="ChoicePage">
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_13">
         <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pushButtonLab">
-            <property name="minimumSize">
-             <size>
-              <width>250</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>лабораторные</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pushButtonCallStudents">
-            <property name="minimumSize">
-             <size>
-              <width>250</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>вызвать студента</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pushButtonChangedPoint">
-            <property name="minimumSize">
-             <size>
-              <width>250</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>изменить кол-во вызовов</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pushButtonSaveData">
-            <property name="minimumSize">
-             <size>
-              <width>250</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-            </property>
-            <property name="text">
-             <string>сохранить</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="CallPage">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item alignment="Qt::AlignHCenter">
-         <widget class="QTextEdit" name="textEditOutput">
-          <property name="minimumSize">
-           <size>
-            <width>700</width>
-            <height>350</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>10000</width>
-            <height>400</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignHCenter">
-         <widget class="QTextEdit" name="textEditInput">
-          <property name="minimumSize">
-           <size>
-            <width>700</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>100000</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="LabPage">
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="horizontalSpacer_14">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -335,14 +297,338 @@
          </spacer>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMaximumSize</enum>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <spacer name="verticalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <spacer name="horizontalSpacer_15">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonCallStudents">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>70</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>400</width>
+                  <height>150</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>вызвать студента</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonChangedPoint">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>70</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>400</width>
+                  <height>150</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>изменить кол-во вызовов</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_16">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item alignment="Qt::AlignHCenter">
+             <widget class="QPushButton" name="pushButtonLab">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>250</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>400</width>
+                <height>150</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+              </property>
+              <property name="text">
+               <string>лабораторные</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_17">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="CallPage">
+       <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <item>
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTextEdit" name="textEditOutput">
+            <property name="minimumSize">
+             <size>
+              <width>700</width>
+              <height>350</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>10000</width>
+              <height>10000</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>30</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QLineEdit" name="lineEditMessage">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>введите  количество учинеков</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="textEditInput">
+            <property name="minimumSize">
+             <size>
+              <width>700</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100000</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="LabPage">
+       <layout class="QHBoxLayout" name="horizontalLayout_12">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
              <widget class="QPushButton" name="pushButtonCreateLab">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>100</width>
@@ -351,8 +637,8 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>100</width>
-                <height>30</height>
+                <width>150</width>
+                <height>50</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -365,6 +651,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="pushButtonCansel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>100</width>
@@ -373,8 +665,8 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>100</width>
-                <height>30</height>
+                <width>150</width>
+                <height>50</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -388,93 +680,85 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
-             <widget class="QScrollArea" name="scrollAreaNames">
-              <property name="minimumSize">
-               <size>
-                <width>200</width>
-                <height>400</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>200</width>
-                <height>500</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
-              </property>
-              <property name="widgetResizable">
-               <bool>true</bool>
-              </property>
-              <widget class="QWidget" name="scrollAreaWidgetContents">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>198</width>
-                 <height>498</height>
-                </rect>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayoutNames"/>
-                </item>
-               </layout>
-              </widget>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QScrollArea" name="scrollAreaLabNames">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>200</width>
+                  <height>400</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>10000</width>
+                  <height>1000</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>366</width>
+                   <height>608</height>
+                  </rect>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayoutLabNames"/>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QScrollArea" name="scrollAreaLabNames">
-              <property name="minimumSize">
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
                <size>
-                <width>200</width>
-                <height>400</height>
+                <width>40</width>
+                <height>20</height>
                </size>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>200</width>
-                <height>500</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
-              </property>
-              <property name="widgetResizable">
-               <bool>true</bool>
-              </property>
-              <widget class="QWidget" name="scrollAreaWidgetContents_2">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>198</width>
-                 <height>498</height>
-                </rect>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayoutLabNames"/>
-                </item>
-               </layout>
-              </widget>
-             </widget>
+             </spacer>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
                <spacer name="verticalSpacer_2">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::MinimumExpanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -484,8 +768,14 @@
                 </property>
                </spacer>
               </item>
-              <item>
+              <item alignment="Qt::AlignHCenter">
                <widget class="QPushButton" name="pushButtonChangedLab">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
@@ -494,8 +784,8 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>150</width>
-                  <height>60</height>
+                  <width>300</width>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -506,8 +796,14 @@
                 </property>
                </widget>
               </item>
-              <item>
+              <item alignment="Qt::AlignHCenter">
                <widget class="QPushButton" name="pushButtonDeleteLab">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
@@ -516,8 +812,8 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>150</width>
-                  <height>60</height>
+                  <width>300</width>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -528,30 +824,14 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QPushButton" name="pushButtonChangedPoints">
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>60</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>60</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-                </property>
-                <property name="text">
-                 <string>Выставить баллы</string>
-                </property>
-               </widget>
-              </item>
-              <item>
+              <item alignment="Qt::AlignHCenter">
                <widget class="QPushButton" name="pushButtonShowTable">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
@@ -560,8 +840,8 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>150</width>
-                  <height>60</height>
+                  <width>300</width>
+                  <height>80</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -576,6 +856,9 @@
                <spacer name="verticalSpacer">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::MinimumExpanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -596,6 +879,9 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>40</width>
@@ -607,17 +893,27 @@
        </layout>
       </widget>
       <widget class="QWidget" name="ChangeLabPage">
-       <layout class="QVBoxLayout" name="verticalLayout_8">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
+         <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetFixedSize</enum>
-            </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QPushButton" name="pushButtonAddCriterial">
               <property name="sizePolicy">
@@ -644,47 +940,56 @@
              </widget>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetFixedSize</enum>
+             <widget class="QTextEdit" name="textEditLabName">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-              <item alignment="Qt::AlignHCenter">
-               <widget class="QTextEdit" name="textEditLabName">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>250</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>250</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+              <property name="minimumSize">
+               <size>
+                <width>250</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>250</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+              </property>
+             </widget>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableWidgetChangedLab">
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>250</number>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidgetChangedLab">
-          <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>250</number>
-          </attribute>
-         </widget>
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -717,6 +1022,22 @@
       </widget>
      </widget>
     </item>
+    <item>
+     <spacer name="verticalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -724,7 +1045,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>768</width>
+     <width>923</width>
      <height>20</height>
     </rect>
    </property>
